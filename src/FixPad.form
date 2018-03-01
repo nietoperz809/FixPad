@@ -19,12 +19,19 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="f67b2" class="javax.swing.JTextArea" binding="textArea1" default-binding="true">
+              <scrollpane id="379db">
                 <constraints>
                   <card name="Card1"/>
                 </constraints>
                 <properties/>
-              </component>
+                <border type="none"/>
+                <children>
+                  <component id="f67b2" class="javax.swing.JTextArea" binding="textArea1" default-binding="true">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                </children>
+              </scrollpane>
             </children>
           </grid>
           <grid id="544e8" layout-manager="CardLayout" hgap="0" vgap="0">
@@ -34,12 +41,19 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="b1156" class="javax.swing.JTextArea" binding="textArea2" default-binding="true">
+              <scrollpane id="78fab">
                 <constraints>
                   <card name="Card1"/>
                 </constraints>
                 <properties/>
-              </component>
+                <border type="none"/>
+                <children>
+                  <component id="b1156" class="javax.swing.JTextArea" binding="textArea2" default-binding="true">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                </children>
+              </scrollpane>
             </children>
           </grid>
           <grid id="fcafb" layout-manager="CardLayout" hgap="0" vgap="0">
@@ -49,12 +63,19 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="28f23" class="javax.swing.JTextArea" binding="textArea3" default-binding="true">
+              <scrollpane id="237cf">
                 <constraints>
                   <card name="Card1"/>
                 </constraints>
                 <properties/>
-              </component>
+                <border type="none"/>
+                <children>
+                  <component id="28f23" class="javax.swing.JTextArea" binding="textArea3" default-binding="true">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                </children>
+              </scrollpane>
             </children>
           </grid>
         </children>

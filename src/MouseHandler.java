@@ -17,6 +17,34 @@ public class MouseHandler extends MouseInputAdapter
                 ta.setFont(f);
         });
         popup.add (menuItem);
+
+        menuItem = new JMenuItem("Caret Color...");
+        menuItem.addActionListener(e ->
+        {
+            Color col = JColorChooser.showDialog(null,
+                    "Caret Color", null);
+            ta.setCaretColor(col);
+        });
+        popup.add (menuItem);
+
+        menuItem = new JMenuItem("Foreground Color...");
+        menuItem.addActionListener(e ->
+        {
+            Color col = JColorChooser.showDialog(null,
+                    "Foreground Color", null);
+            ta.setForeground(col);
+        });
+        popup.add (menuItem);
+
+        menuItem = new JMenuItem("Background Color...");
+        menuItem.addActionListener(e ->
+        {
+            Color col = JColorChooser.showDialog(null,
+                    "Background Color", null);
+            ta.setBackground(col);
+        });
+        popup.add (menuItem);
+
     }
 
     @Override

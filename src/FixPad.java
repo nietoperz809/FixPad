@@ -118,18 +118,24 @@ public class FixPad
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new CardLayout(0, 0));
         tabbedPane1.addTab("Untitled", panel2);
+        final JScrollPane scrollPane1 = new JScrollPane();
+        panel2.add(scrollPane1, "Card1");
         textArea1 = new JTextArea();
-        panel2.add(textArea1, "Card1");
+        scrollPane1.setViewportView(textArea1);
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new CardLayout(0, 0));
         tabbedPane1.addTab("Untitled", panel3);
+        final JScrollPane scrollPane2 = new JScrollPane();
+        panel3.add(scrollPane2, "Card1");
         textArea2 = new JTextArea();
-        panel3.add(textArea2, "Card1");
+        scrollPane2.setViewportView(textArea2);
         final JPanel panel4 = new JPanel();
         panel4.setLayout(new CardLayout(0, 0));
         tabbedPane1.addTab("Untitled", panel4);
+        final JScrollPane scrollPane3 = new JScrollPane();
+        panel4.add(scrollPane3, "Card1");
         textArea3 = new JTextArea();
-        panel4.add(textArea3, "Card1");
+        scrollPane3.setViewportView(textArea3);
     }
 
     /**

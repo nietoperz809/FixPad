@@ -24,6 +24,7 @@ public class FileManager implements Runnable
     public void start()
     {
         loadEditors();
+        Settings.load(list);
         scheduler.scheduleAtFixedRate(this, 0, 10, TimeUnit.SECONDS);
     }
 
@@ -31,8 +32,8 @@ public class FileManager implements Runnable
     {
         scheduler.shutdown();
         saveEditors();
+        Settings.save(list);
     }
-
 
     private String load (String fname)
     {
@@ -83,7 +84,10 @@ public class FileManager implements Runnable
             String old = load (fname);
             if (old == null || !txt.equals(old))
             {
-                save (txt, fname);
+                if (!save(txt, fname))
+                {
+                    System.out.println("save failed: "+fname);
+                }
             }
         }
     }
