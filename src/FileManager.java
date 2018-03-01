@@ -12,11 +12,11 @@ import java.util.concurrent.TimeUnit;
 
 public class FileManager implements Runnable
 {
-    private final ArrayList<JEditorPane> list = new ArrayList<>();
+    private final ArrayList<JTextArea> list = new ArrayList<>();
     private final String homePath = System.getProperty("user.home");
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
-    public void put(JEditorPane jp)
+    public void put(JTextArea jp)
     {
         list.add(jp);
     }
@@ -66,7 +66,7 @@ public class FileManager implements Runnable
     {
         for (int n=0; n<list.size(); n++)
         {
-            JEditorPane jp = list.get(n);
+            JTextArea jp = list.get(n);
             String fname = createFname(n);
             String txt = load (fname);
             jp.setText(txt);
@@ -77,7 +77,7 @@ public class FileManager implements Runnable
     {
         for (int n=0; n<list.size(); n++)
         {
-            JEditorPane jp = list.get(n);
+            JTextArea jp = list.get(n);
             String fname = createFname(n);
             String txt = jp.getText();
             String old = load (fname);

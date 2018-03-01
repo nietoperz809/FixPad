@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="FixPad:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/FixPad_jar</output-path>
+    <root id="archive" name="FixPad.jar">
+      <element id="module-output" name="FixPad" />
+    </root>
+  </artifact>
+</component>

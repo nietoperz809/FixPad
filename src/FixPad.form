@@ -7,39 +7,19 @@
     <properties/>
     <border type="none"/>
     <children>
-      <tabbedpane id="5f0c5" binding="tabbedPane1" default-binding="true">
+      <tabbedpane id="bc655" binding="tabbedPane1" default-binding="true">
         <constraints border-constraint="Center"/>
         <properties/>
         <border type="none"/>
         <children>
-          <grid id="467b0" layout-manager="CardLayout" hgap="0" vgap="0">
+          <grid id="128c1" layout-manager="CardLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Untitled"/>
             </constraints>
             <properties/>
             <border type="none"/>
             <children>
-              <component id="ed88e" class="javax.swing.JEditorPane" binding="editorPane1" default-binding="true">
-                <constraints>
-                  <card name="Card1"/>
-                </constraints>
-                <properties>
-                  <background color="-15987184"/>
-                  <caretColor color="-1170650"/>
-                  <font name="Consolas" size="20"/>
-                  <foreground color="-4539718"/>
-                </properties>
-              </component>
-            </children>
-          </grid>
-          <grid id="34691" layout-manager="CardLayout" hgap="0" vgap="0">
-            <constraints>
-              <tabbedpane title="Untitled"/>
-            </constraints>
-            <properties/>
-            <border type="none"/>
-            <children>
-              <component id="1cc58" class="javax.swing.JEditorPane" binding="editorPane2" default-binding="true">
+              <component id="f67b2" class="javax.swing.JTextArea" binding="textArea1" default-binding="true">
                 <constraints>
                   <card name="Card1"/>
                 </constraints>
@@ -47,14 +27,29 @@
               </component>
             </children>
           </grid>
-          <grid id="8785d" layout-manager="CardLayout" hgap="0" vgap="0">
+          <grid id="544e8" layout-manager="CardLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Untitled"/>
             </constraints>
             <properties/>
             <border type="none"/>
             <children>
-              <component id="e647a" class="javax.swing.JEditorPane" binding="editorPane3" default-binding="true">
+              <component id="b1156" class="javax.swing.JTextArea" binding="textArea2" default-binding="true">
+                <constraints>
+                  <card name="Card1"/>
+                </constraints>
+                <properties/>
+              </component>
+            </children>
+          </grid>
+          <grid id="fcafb" layout-manager="CardLayout" hgap="0" vgap="0">
+            <constraints>
+              <tabbedpane title="Untitled"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="28f23" class="javax.swing.JTextArea" binding="textArea3" default-binding="true">
                 <constraints>
                   <card name="Card1"/>
                 </constraints>

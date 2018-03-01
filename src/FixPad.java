@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -7,16 +8,35 @@ public class FixPad
 {
     private JPanel panel1;
     private JTabbedPane tabbedPane1;
-    private JEditorPane editorPane1;
-    private JEditorPane editorPane2;
-    private JEditorPane editorPane3;
+    private JTextArea textArea1;
+    private JTextArea textArea2;
+    private JTextArea textArea3;
     private FileManager fman = new FileManager();
+
+    private void adjustTextArea (JTextArea ta)
+    {
+        ta.setBackground(new Color(12, 14, 16));
+        ta.setForeground(Color.WHITE);
+        Font f = Tools.getFont("Consolas", -1, 20, ta.getFont());
+        if (f != null)
+        {
+            ta.setFont(f);
+        }
+        BlockCaret mc = new BlockCaret();
+        mc.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        ta.setCaret(mc);
+        ta.setCaretColor(Color.ORANGE);
+        ta.addMouseListener(new MouseHandler(ta));
+    }
 
     private void startFman ()
     {
-        fman.put(editorPane1);
-        fman.put(editorPane2);
-        fman.put(editorPane3);
+        adjustTextArea(textArea1);
+        adjustTextArea(textArea2);
+        adjustTextArea(textArea3);
+        fman.put(textArea1);
+        fman.put(textArea2);
+        fman.put(textArea3);
         fman.start();
     }
 
@@ -98,55 +118,18 @@ public class FixPad
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new CardLayout(0, 0));
         tabbedPane1.addTab("Untitled", panel2);
-        editorPane1 = new JEditorPane();
-        editorPane1.setBackground(new Color(-15987184));
-        editorPane1.setCaretColor(new Color(-1170650));
-        Font editorPane1Font = this.$$$getFont$$$("Consolas", -1, 20, editorPane1.getFont());
-        if (editorPane1Font != null)
-        {
-            editorPane1.setFont(editorPane1Font);
-        }
-        editorPane1.setForeground(new Color(-4539718));
-        panel2.add(editorPane1, "Card1");
+        textArea1 = new JTextArea();
+        panel2.add(textArea1, "Card1");
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new CardLayout(0, 0));
         tabbedPane1.addTab("Untitled", panel3);
-        editorPane2 = new JEditorPane();
-        panel3.add(editorPane2, "Card1");
+        textArea2 = new JTextArea();
+        panel3.add(textArea2, "Card1");
         final JPanel panel4 = new JPanel();
         panel4.setLayout(new CardLayout(0, 0));
         tabbedPane1.addTab("Untitled", panel4);
-        editorPane3 = new JEditorPane();
-        panel4.add(editorPane3, "Card1");
-    }
-
-    /**
-     * @noinspection ALL
-     */
-    private Font $$$getFont$$$ (String fontName, int style, int size, Font currentFont)
-    {
-        if (currentFont == null)
-        {
-            return null;
-        }
-        String resultName;
-        if (fontName == null)
-        {
-            resultName = currentFont.getName();
-        }
-        else
-        {
-            Font testFont = new Font(fontName, Font.PLAIN, 10);
-            if (testFont.canDisplay('a') && testFont.canDisplay('1'))
-            {
-                resultName = fontName;
-            }
-            else
-            {
-                resultName = currentFont.getName();
-            }
-        }
-        return new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
+        textArea3 = new JTextArea();
+        panel4.add(textArea3, "Card1");
     }
 
     /**
