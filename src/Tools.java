@@ -1,6 +1,7 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.print.*;
 import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
@@ -38,10 +39,26 @@ public class Tools
 
     public static BufferedImage toImage (JTextArea ta) throws PrinterException
     {
-        BufferedImage bimage = new BufferedImage(ta.getWidth(), ta.getHeight(), BufferedImage.TYPE_INT_ARGB);
+//        BufferedImage fake1 = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+//        Graphics2D fake2 = fake1.createGraphics();
+//        FontMetrics fm = fake2.getFontMetrics(ta.getFont());
+
+        Rectangle rc = ta.getVisibleRect();
+        BufferedImage bimage = new BufferedImage(rc.width,
+                rc.height,
+                BufferedImage.TYPE_INT_ARGB);
         Graphics2D bGr = bimage.createGraphics();
+
+        bGr.setColor(ta.getBackground());
+        bGr.fillRect(0, 0, rc.width, rc.height);
+        
         Printable pr = ta.getPrintable(null, null);
-        pr.print(bGr, new PageFormat(), 0);
+        PageFormat form = new PageFormat();
+        //form.setOrientation(PageFormat.PORTRAIT);
+        Paper pap = new Paper();
+        pap.setImageableArea(3,3, 2000, 2000);
+        form.setPaper(pap);
+        pr.print(bGr, form, 0);
         return bimage;
     }
 
