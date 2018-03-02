@@ -64,6 +64,21 @@ public class FontChooser2 extends JDialog {
      */
     protected JLabel previewArea;
 
+    public void setFont (Font f)
+    {
+        resultFont = f;
+        String name = f.getName();
+        for (int i=0; i<fontNameChoice.getItemCount(); i++)
+        {
+            String n2 = fontNameChoice.getItem(i);
+            if (n2.equals(name))
+            {
+                fontNameChoice.select(i);
+                return;
+            }
+        }
+    }
+
     /**
      * Construct a FontChooser -- Sets title and gets array of fonts on the
      * system. Builds a GUI to let the user choose one font at one size.

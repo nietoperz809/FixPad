@@ -12,13 +12,13 @@ import java.util.concurrent.TimeUnit;
 
 public class FileManager implements Runnable
 {
-    private final ArrayList<JTextArea> list = new ArrayList<>();
+    private ArrayList<JTextArea> list; // = new ArrayList<>();
     private final String homePath = System.getProperty("user.home");
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
-    public void put(JTextArea jp)
+    public void put (ArrayList<JTextArea> otherList)
     {
-        list.add(jp);
+        list = otherList;
     }
 
     public void start()

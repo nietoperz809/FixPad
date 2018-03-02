@@ -12,7 +12,11 @@ public class MouseHandler extends MouseInputAdapter
         JMenuItem menuItem = new JMenuItem("Font...");
         menuItem.addActionListener(e ->
         {
-            Font f = FontChooser2.main();
+            final FontChooser2 fc = new FontChooser2(null);
+            fc.setFont(ta.getFont());
+            fc.setVisible(true);
+            Font f = fc.getSelectedFont();
+
             if (f != null)
                 ta.setFont(f);
         });
