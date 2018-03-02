@@ -54,9 +54,10 @@ public class Tools
         
         Printable pr = ta.getPrintable(null, null);
         PageFormat form = new PageFormat();
-        //form.setOrientation(PageFormat.PORTRAIT);
+        form.setOrientation(PageFormat.PORTRAIT);
         Paper pap = new Paper();
         pap.setImageableArea(3,3, 2000, 2000);
+        pap.setSize(rc.width, rc.height);
         form.setPaper(pap);
         pr.print(bGr, form, 0);
         return bimage;
