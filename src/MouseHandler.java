@@ -45,6 +45,19 @@ public class MouseHandler extends MouseInputAdapter
         });
         popup.add (menuItem);
 
+        menuItem = new JMenuItem("Save as image");
+        menuItem.addActionListener(e ->
+        {
+            Tools.saveAsImage(ta, "c:\\TextArea");
+        });
+        popup.add (menuItem);
+
+        menuItem = new JMenuItem("As image to clipboard");
+        menuItem.addActionListener(e ->
+        {
+            Tools.saveToClipboard(ta);
+        });
+        popup.add (menuItem);
     }
 
     @Override
