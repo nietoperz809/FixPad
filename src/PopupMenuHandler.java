@@ -105,6 +105,25 @@ public class PopupMenuHandler extends MouseInputAdapter
         });
         popup.add(menuItem);
 
+        menuItem = new JMenuItem("Capitalize");
+        menuItem.addActionListener(e ->
+        {
+            ta.push();
+            TextAreaTools.capitalize(ta);
+        });
+        popup.add(menuItem);
+
+        menuItem = new JMenuItem("Reverse");
+        menuItem.addActionListener(e ->
+        {
+            ta.push();
+            String rev = new StringBuilder(ta.getText()).reverse().toString();
+            ta.setText(rev);
+        });
+        popup.add(menuItem);
+
+        popup.add(new JSeparator());
+
         menuItem = new JMenuItem("Undo");
         menuItem.addActionListener(e -> ta.pop());
         popup.add(menuItem);

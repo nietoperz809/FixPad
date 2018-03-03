@@ -9,7 +9,12 @@ import java.util.ArrayList;
 
 public class TextAreaTools
 {
-    public static ArrayList<String> TaToList (MyTextArea ta)
+    /**
+     * Create a List of Lines of TextArea
+     * @param ta TextArea
+     * @return List of Lines
+     */
+    public static ArrayList<String> TaLinesToList (MyTextArea ta)
     {
         int lines = ta.getLineCount();
         ArrayList<String> list = new ArrayList<>();
@@ -32,9 +37,13 @@ public class TextAreaTools
         return list;
     }
 
+    /**
+     * Put a line number in front of every Line
+     * @param ta Textarea that is changed
+     */
     public static void numberText (MyTextArea ta)
     {
-        ArrayList<String> list = TaToList(ta);
+        ArrayList<String> list = TaLinesToList(ta);
         StringBuffer sb = new StringBuffer();
         int num = 1;
         for (String s : list)
@@ -44,9 +53,13 @@ public class TextAreaTools
         ta.setText(sb.toString());
     }
 
+    /**
+     * Put a Roman line number in front of every Line
+     * @param ta Textarea that is changed
+     */
     public static void romanNumberText (MyTextArea ta)
     {
-        ArrayList<String> list = TaToList(ta);
+        ArrayList<String> list = TaLinesToList(ta);
         StringBuffer sb = new StringBuffer();
         int num = 1;
         for (String s : list)
@@ -57,18 +70,49 @@ public class TextAreaTools
         ta.setText(sb.toString());
     }
 
+    public static void capitalize (MyTextArea ta)
+    {
+        ArrayList<String> list = TaLinesToList(ta);
+        StringBuffer sb = new StringBuffer();
+        for (String s : list)
+        {
+            StringBuffer b2 = new StringBuffer(s);
+            for (int n=0; n<b2.length()-1; n++)
+            {
+                char c1 = b2.charAt(n);
+                char c2 = b2.charAt(n+1);
+                if (Character.isWhitespace(c1))
+                {
+                    if (Character.isLetter(c2))
+                    {
+                        b2.setCharAt(n+1, Character.toUpperCase(c2));
+                    }
+                }
+            }
+            sb.append (b2);
+        }
+        ta.setText(sb.toString());
+    }
 
+    /**
+     * Centers Text of a TextArea
+     * @param ta TextArea that is changed
+     */
     public static void centerText (MyTextArea ta)
     {
         BufferedImage fake1 = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         Graphics2D fake2 = fake1.createGraphics();
         FontMetrics fm = fake2.getFontMetrics(ta.getFont());
-
-        int lines = ta.getLineCount();
-        ArrayList<String> list = TaToList(ta);
+        ArrayList<String> list = TaLinesToList(ta);
         alignLines (list, fm, ta);
     }
 
+    /**
+     * Helper function for the above one
+     * @param list List of lines coming from TextArea
+     * @param fm Fontmetrics to calculate line length
+     * @param ta TextArea that is changed
+     */
     private static void alignLines (ArrayList<String> list, FontMetrics fm, MyTextArea ta)
     {
         String leading = "      ";
@@ -97,6 +141,11 @@ public class TextAreaTools
         ta.setText (sb.toString());
     }
 
+    /**
+     * Create Image from Textarea and put in to the Clipboard
+     * @param ta Source Textarea
+     * @return false if an error occurs
+     */
     public static boolean saveImageToClipboard (MyTextArea ta)
     {
         try
@@ -112,6 +161,12 @@ public class TextAreaTools
         }
     }
 
+    /**
+     * Write TextArea as image to disk
+     * @param ta Source TextArea
+     * @param filePath Path and file name of the new image
+     * @return false if smth. gone wrong
+     */
     public static boolean saveAsImage (MyTextArea ta, String filePath)
     {
         try
@@ -127,6 +182,12 @@ public class TextAreaTools
         }
     }
 
+    /**
+     * Make image from TextArea
+     * @param ta Source Textarea
+     * @return The Image
+     * @throws PrinterException if conversion fails
+     */
     private static BufferedImage toImage (MyTextArea ta) throws PrinterException
     {
         Rectangle rc = ta.getVisibleRect();
