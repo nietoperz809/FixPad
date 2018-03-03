@@ -1,6 +1,5 @@
 import java.awt.*;
 import java.awt.datatransfer.*;
-import java.io.IOException;
 
 public class ClipboardImage implements ClipboardOwner
 {
@@ -39,14 +38,14 @@ public class ClipboardImage implements ClipboardOwner
 
         private final Image i;
 
-        public TransferableImage(Image i)
+        TransferableImage (Image i)
         {
             this.i = i;
         }
 
         @Override
         public Object getTransferData(DataFlavor flavor)
-                throws UnsupportedFlavorException, IOException
+                throws UnsupportedFlavorException
         {
             if (flavor.equals(DataFlavor.imageFlavor) && i != null)
             {
@@ -77,7 +76,6 @@ public class ClipboardImage implements ClipboardOwner
                     return true;
                 }
             }
-
             return false;
         }
     }

@@ -1,11 +1,6 @@
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
-import java.awt.print.*;
 import java.awt.image.BufferedImage;
-import java.awt.print.PageFormat;
-import java.awt.print.Printable;
-import java.awt.print.PrinterException;
 import java.io.File;
 import java.io.IOException;
 
@@ -37,63 +32,8 @@ public class Tools
         return new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
     }
 
-    public static BufferedImage toImage (JTextArea ta) throws PrinterException
-    {
-//        BufferedImage fake1 = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-//        Graphics2D fake2 = fake1.createGraphics();
-//        FontMetrics fm = fake2.getFontMetrics(ta.getFont());
 
-        Rectangle rc = ta.getVisibleRect();
-        BufferedImage bimage = new BufferedImage(rc.width,
-                rc.height,
-                BufferedImage.TYPE_INT_ARGB);
-        Graphics2D bGr = bimage.createGraphics();
-
-        bGr.setColor(ta.getBackground());
-        bGr.fillRect(0, 0, rc.width, rc.height);
-        
-        Printable pr = ta.getPrintable(null, null);
-        PageFormat form = new PageFormat();
-        form.setOrientation(PageFormat.PORTRAIT);
-        Paper pap = new Paper();
-        pap.setImageableArea(3,3, 2000, 2000);
-        pap.setSize(rc.width, rc.height);
-        form.setPaper(pap);
-        pr.print(bGr, form, 0);
-        return bimage;
-    }
-
-    public static boolean saveToClipboard (JTextArea ta)
-    {
-        try
-        {
-            BufferedImage bimage = toImage (ta);
-            new ClipboardImage(bimage);
-            return true;
-        }
-        catch (Exception e)
-        {
-            System.out.println(e);
-            return false;
-        }
-    }
-
-    public static boolean saveAsImage (JTextArea ta, String filePath)
-    {
-        try
-        {
-            BufferedImage bimage = toImage (ta);
-            saveImage(filePath, bimage,false);
-            return true;
-        }
-        catch (Exception e)
-        {
-            System.out.println(e);
-            return false;
-        }
-    }
-
-    public static void saveImage (String name, BufferedImage img, boolean jpg) throws IOException
+    static void saveImage (String name, BufferedImage img, boolean jpg) throws IOException
     {
         if (jpg)
         {
@@ -119,4 +59,19 @@ public class Tools
             ImageIO.write(img, "png", f);
         }
     }
+
+    public static int findAndSelect (java.awt.List li, String s)
+    {
+        for (int i = 0; i < li.getItemCount(); i++)
+        {
+            String item = li.getItem(i);
+            if (item.equals(s))
+            {
+                li.select(i);
+                return i;
+            }
+        }
+        return -1;
+    }
+
 }

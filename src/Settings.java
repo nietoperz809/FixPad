@@ -1,4 +1,3 @@
-import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.Serializable;
@@ -15,10 +14,10 @@ public class Settings implements Serializable
     private final static String fname
             = System.getProperty("user.home") + File.separator + "FPsettings";
 
-    static public void save (ArrayList<JTextArea> list)
+    static public void save (ArrayList<MyTextArea> list)
     {
         ObjectWriter ow = new ObjectWriter(fname);
-        for (JTextArea jt : list)
+        for (MyTextArea jt : list)
         {
             Settings st = new Settings();
             st.font = jt.getFont();
@@ -31,12 +30,12 @@ public class Settings implements Serializable
         ow.close();
     }
 
-    static public void load (ArrayList<JTextArea> list)
+    static public void load (ArrayList<MyTextArea> list)
     {
         try
         {
             ObjectReader or = new ObjectReader(fname);
-            for (JTextArea jt : list)
+            for (MyTextArea jt : list)
             {
                 Settings st = (Settings) or.getObject();
                 jt.setFont(st.font);

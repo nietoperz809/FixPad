@@ -1,9 +1,5 @@
-
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * A font selection dialog.
@@ -15,75 +11,68 @@ import java.awt.event.ActionListener;
  * @author Ian Darwin
  * @version $Id: FontChooser.java,v 1.19 2004/03/20 20:44:56 ian Exp $
  */
-public class FontChooser2 extends JDialog {
+public class FontChooser2 extends JDialog
+{
 
     // Results:
 
-    /** The font the user has chosen */
-    protected Font resultFont;
+    /**
+     * The index of the default size (e.g., 14 point == 4)
+     */
+    private static final int DEFAULT_SIZE = 4;
+    /**
+     * The font name chooser
+     */
+    private final List fontNameChoice;
 
-    /** The resulting font name */
-    protected String resultName;
-
-    /** The resulting font size */
-    protected int resultSize;
-
-    /** The resulting boldness */
-    protected boolean isBold;
-
-    /** The resulting italicness */
-    protected boolean isItalic;
+// --Commented out by Inspection START (3/2/2018 8:06 PM):
+//    /** The resulting font size */
+//    private int resultSize;
+// --Commented out by Inspection STOP (3/2/2018 8:06 PM)
+    /**
+     * The font size chooser
+     */
+    private final List fontSizeChoice;
+    /**
+     * The bold and italic choosers
+     */
+    private final Checkbox bold;
 
     // Working fields
-
-    /** Display text */
-    protected String displayText = "Qwerty Yuiop";
-
-    /** The list of Fonts */
-    protected String fontList[];
-
-    /** The font name chooser */
-    protected List fontNameChoice;
-
-    /** The font size chooser */
-    protected List fontSizeChoice;
-
-    /** The bold and italic choosers */
-    Checkbox bold, italic;
-
-    /** The list of font sizes */
-    protected String fontSizes[] = { "8", "10", "11", "12", "14", "16", "18",
-            "20", "24", "30", "36", "40", "48", "60", "72" };
-
-    /** The index of the default size (e.g., 14 point == 4) */
-    protected static final int DEFAULT_SIZE = 4;
-
+    private final Checkbox italic;
     /**
      * The display area. Use a JLabel as the AWT label doesn't always honor
      * setFont() in a timely fashion :-)
      */
-    protected JLabel previewArea;
-
-    public void setFont (Font f)
-    {
-        resultFont = f;
-        String name = f.getName();
-        for (int i=0; i<fontNameChoice.getItemCount(); i++)
-        {
-            String n2 = fontNameChoice.getItem(i);
-            if (n2.equals(name))
-            {
-                fontNameChoice.select(i);
-                return;
-            }
-        }
-    }
+    private final JLabel previewArea;
+    /**
+     * Called from the action handlers to get the font info, build a font, and
+     * set it.
+     */
+    int resultSize;
+    /**
+     * The font the user has chosen
+     */
+    private Font resultFont;
+    /**
+     * The resulting font name
+     */
+    private String resultName;
+    /**
+     * The resulting boldness
+     */
+    private boolean isBold;
+    /**
+     * The resulting italicness
+     */
+    private boolean isItalic;
 
     /**
      * Construct a FontChooser -- Sets title and gets array of fonts on the
      * system. Builds a GUI to let the user choose one font at one size.
      */
-    public FontChooser2(Frame f) {
+    public FontChooser2 (Frame f)
+    {
         super(f, "Font Chooser", true);
 
         Container cp = getContentPane();
@@ -92,6 +81,7 @@ public class FontChooser2 extends JDialog {
         top.setLayout(new FlowLayout());
 
         fontNameChoice = new List(8);
+        fontNameChoice.addItemListener(e -> previewFont());
         top.add(fontNameChoice);
 
         Toolkit toolkit = Toolkit.getDefaultToolkit();
@@ -100,18 +90,29 @@ public class FontChooser2 extends JDialog {
         // For JDK 1.2: a much longer list; most of the names that come
         // with your OS (e.g., Arial), plus the Sun/Java ones (Lucida,
         // Lucida Bright, Lucida Sans...)
-        fontList = GraphicsEnvironment.getLocalGraphicsEnvironment()
+        /* The list of Fonts */
+        String[] fontList = GraphicsEnvironment.getLocalGraphicsEnvironment()
                 .getAvailableFontFamilyNames();
 
-        for (int i = 0; i < fontList.length; i++)
-            fontNameChoice.add(fontList[i]);
+        for (String aFontList : fontList)
+        {
+            fontNameChoice.add(aFontList);
+        }
         fontNameChoice.select(0);
 
         fontSizeChoice = new List(8);
+        fontSizeChoice.addItemListener(e -> previewFont());
+
         top.add(fontSizeChoice);
 
-        for (int i = 0; i < fontSizes.length; i++)
-            fontSizeChoice.add(fontSizes[i]);
+        /* The list of font sizes */
+        String[] fontSizes = {"8", "10", "11", "12", "14", "16", "18",
+                "20", "24", "30", "36", "40", "48", "60", "72"
+        };
+        for (String fontSize : fontSizes)
+        {
+            fontSizeChoice.add(fontSize);
+        }
         fontSizeChoice.select(DEFAULT_SIZE);
 
         cp.add(top, BorderLayout.NORTH);
@@ -122,6 +123,8 @@ public class FontChooser2 extends JDialog {
         attrs.add(bold = new Checkbox("Bold", false));
         attrs.add(italic = new Checkbox("Italic", false));
 
+        /* Display text */
+        String displayText = "Qwerty Yuiop";
         previewArea = new JLabel(displayText, JLabel.CENTER);
         previewArea.setSize(200, 50);
         cp.add(previewArea, BorderLayout.CENTER);
@@ -130,36 +133,24 @@ public class FontChooser2 extends JDialog {
 
         JButton okButton = new JButton("Apply");
         bot.add(okButton);
-        okButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                previewFont();
-                dispose();
-                setVisible(false);
-            }
-        });
-
-        JButton pvButton = new JButton("Preview");
-        bot.add(pvButton);
-        pvButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                previewFont();
-            }
+        okButton.addActionListener(e -> {
+            previewFont();
+            dispose();
+            setVisible(false);
         });
 
         JButton canButton = new JButton("Cancel");
         bot.add(canButton);
-        canButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Set all values to null. Better: restore previous.
-                resultFont = null;
-                resultName = null;
-                resultSize = 0;
-                isBold = false;
-                isItalic = false;
+        canButton.addActionListener(e -> {
+            // Set all values to null. Better: restore previous.
+            resultFont = null;
+            resultName = null;
+            resultSize = 0;
+            isBold = false;
+            isItalic = false;
 
-                dispose();
-                setVisible(false);
-            }
+            dispose();
+            setVisible(false);
         });
 
         cp.add(bot, BorderLayout.SOUTH);
@@ -170,21 +161,22 @@ public class FontChooser2 extends JDialog {
         setLocation(100, 100);
     }
 
-    /**
-     * Called from the action handlers to get the font info, build a font, and
-     * set it.
-     */
-    protected void previewFont() {
+    private void previewFont ()
+    {
         resultName = fontNameChoice.getSelectedItem();
         String resultSizeName = fontSizeChoice.getSelectedItem();
-        int resultSize = Integer.parseInt(resultSizeName);
+        resultSize = Integer.parseInt(resultSizeName);
         isBold = bold.getState();
         isItalic = italic.getState();
         int attrs = Font.PLAIN;
         if (isBold)
+        {
             attrs = Font.BOLD;
+        }
         if (isItalic)
+        {
             attrs |= Font.ITALIC;
+        }
         resultFont = new Font(resultName, attrs, resultSize);
         // System.out.println("resultName = " + resultName + "; " +
         //     "resultFont = " + resultFont);
@@ -192,26 +184,44 @@ public class FontChooser2 extends JDialog {
         pack(); // ensure Dialog is big enough.
     }
 
-    /** Retrieve the selected font name. */
-    public String getSelectedName() {
-        return resultName;
+    public void adjustDisplay (Font f)
+    {
+        resultFont = f;
+        bold.setState(f.isBold());
+        italic.setState(f.isItalic());
+        Tools.findAndSelect(fontNameChoice, f.getName());
+        Tools.findAndSelect(fontSizeChoice, "" + f.getSize());
     }
 
-    /** Retrieve the selected size */
-    public int getSelectedSize() {
-        return resultSize;
-    }
+// --Commented out by Inspection START (3/2/2018 7:49 PM):
+//    /** Retrieve the selected font name. */
+//    public String getSelectedName() {
+//        return resultName;
+//    }
+// --Commented out by Inspection STOP (3/2/2018 7:49 PM)
 
-    /** Retrieve the selected font, or null */
-    public Font getSelectedFont() {
+// --Commented out by Inspection START (3/2/2018 7:49 PM):
+//    /** Retrieve the selected size */
+//    public int getSelectedSize() {
+//        return resultSize;
+//    }
+// --Commented out by Inspection STOP (3/2/2018 7:49 PM)
+
+    /**
+     * Retrieve the selected font, or null
+     */
+    public Font getSelectedFont ()
+    {
         return resultFont;
     }
 
-    /** Simple main program to start it running */
-    public static Font main()
-    {
-        final FontChooser2 fc = new FontChooser2(null);
-        fc.setVisible(true);
-        return fc.getSelectedFont();
-    }
+// --Commented out by Inspection START (3/2/2018 7:49 PM):
+//    /** Simple main program to start it running */
+//    public static Font main()
+//    {
+//        final FontChooser2 fc = new FontChooser2(null);
+//        fc.setVisible(true);
+//        return fc.getSelectedFont();
+//    }
+// --Commented out by Inspection STOP (3/2/2018 7:49 PM)
 }
