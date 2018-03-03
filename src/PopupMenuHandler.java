@@ -9,7 +9,39 @@ public class PopupMenuHandler extends MouseInputAdapter
 
     PopupMenuHandler (MyTextArea ta)
     {
-        JMenuItem menuItem = new JMenuItem("Font...");
+        JMenuItem menuItem;
+
+        menuItem = new JMenuItem("Copy");
+        menuItem.addActionListener(e ->
+        {
+            ta.copy();
+        });
+        popup.add(menuItem);
+
+        menuItem = new JMenuItem("Paste");
+        menuItem.addActionListener(e ->
+        {
+            ta.paste();
+        });
+        popup.add(menuItem);
+
+        menuItem = new JMenuItem("Cut");
+        menuItem.addActionListener(e ->
+        {
+            ta.cut();
+        });
+        popup.add(menuItem);
+
+        menuItem = new JMenuItem("Select all");
+        menuItem.addActionListener(e ->
+        {
+            ta.selectAll();
+        });
+        popup.add(menuItem);
+
+        popup.add(new JSeparator());
+
+        menuItem = new JMenuItem("Font...");
         menuItem.addActionListener(e ->
         {
             final FontChooser2 fc = new FontChooser2(null);
