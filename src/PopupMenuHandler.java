@@ -80,6 +80,22 @@ public class PopupMenuHandler extends MouseInputAdapter
         JMenu men = new JMenu(title);
         JMenuItem menuItem;
 
+        menuItem = new JMenuItem("Replace ...");
+        menuItem.addActionListener(e ->
+        {
+            ta.push();
+            SearchBox.SbResult res = new SearchBox().run();
+            if (res != null)
+            {
+                if (!(res.from.isEmpty() || res.to.isEmpty()))
+                {
+                    String s = ta.getText().replace(res.from, res.to);
+                    ta.setText(s);
+                }
+            }
+        });
+        men.add(menuItem);
+
         menuItem = new JMenuItem("Center Text");
         menuItem.addActionListener(e ->
         {

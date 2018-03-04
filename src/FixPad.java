@@ -23,7 +23,7 @@ public class FixPad
         setupUI();
     }
 
-    public static void main (String[] args) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException
+    public static void main (String[] args)
     {
         //UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
         SwingUtilities.invokeLater(() ->
