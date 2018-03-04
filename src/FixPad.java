@@ -1,15 +1,55 @@
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetAdapter;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.io.File;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.List;
 
 public class FixPad
 {
-    private JPanel panel1;
     private final ArrayList<MyTextArea> list = new ArrayList<>();
     private final FileManager fman = new FileManager();
+    private JPanel panel1;
+
+    {
+        setupUI();
+    }
+
+    public static void main (String[] args)
+    {
+        JFrame frame = new JFrame("FixPad");
+        FixPad pad = new FixPad();
+        frame.addWindowListener(new WindowAdapter()
+        {
+            @Override
+            public void windowClosing (WindowEvent e)
+            {
+                pad.fman.stop();
+            }
+        });
+        frame.setContentPane(pad.panel1);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setSize(1000, 600);
+        pad.startFman();
+        frame.setVisible(true);
+    }
+
+    private void startFman ()
+    {
+        setDefaultAttributes();
+        fman.put(list);
+        fman.start();
+    }
 
     private void setDefaultAttributes ()
     {
@@ -30,114 +70,58 @@ public class FixPad
         }
     }
 
-    private void startFman ()
+    private void enableDrops (MyTextArea jt)
     {
-        setDefaultAttributes();
-        fman.put(list);
-        fman.start();
-    }
-
-    public static void main (String[] args)
-    {
-        JFrame frame = new JFrame("FixPad");
-        FixPad pad = new FixPad();
-        frame.addWindowListener(new WindowListener()
+        new DropTarget(jt, new DropTargetAdapter()
         {
             @Override
-            public void windowOpened (WindowEvent e)
+            public void drop (DropTargetDropEvent event)
             {
-
-            }
-
-            @Override
-            public void windowClosing (WindowEvent e)
-            {
-                pad.fman.stop();
-            }
-
-            @Override
-            public void windowClosed (WindowEvent e)
-            {
-
-            }
-
-            @Override
-            public void windowIconified (WindowEvent e)
-            {
-
-            }
-
-            @Override
-            public void windowDeiconified (WindowEvent e)
-            {
-
-            }
-
-            @Override
-            public void windowActivated (WindowEvent e)
-            {
-
-            }
-
-            @Override
-            public void windowDeactivated (WindowEvent e)
-            {
-
+                event.acceptDrop(DnDConstants.ACTION_COPY);
+                Transferable transferable = event.getTransferable();
+                DataFlavor[] flavors = transferable.getTransferDataFlavors();
+                for (DataFlavor flavor : flavors)
+                {
+                    try
+                    {
+                        if (flavor.isFlavorJavaFileListType())
+                        {
+                            @SuppressWarnings("unchecked")
+                            java.util.List<File> files = (List<File>) transferable.getTransferData(flavor);
+                            File f = files.get(0);
+                            String content = new String(Files.readAllBytes(f.toPath()), Charset.defaultCharset().name());
+                            jt.setText(content);
+                            return; // only one file
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        System.out.println(e);
+                    }
+                }
             }
         });
-        frame.setContentPane(pad.panel1);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setSize(800, 600);
-        pad.startFman();
-        frame.setVisible(true);
     }
 
-    {
-        $$$setupUI$$$();
-    }
-
-    private void $$$setupUI$$$ ()
+    private void setupUI ()
     {
         panel1 = new JPanel();
         panel1.setLayout(new BorderLayout(0, 0));
         JTabbedPane tabbedPane1 = new JTabbedPane();
         panel1.add(tabbedPane1, BorderLayout.CENTER);
 
-        for (int s=0; s<11; s++)
+        for (int s = 0; s < 21; s++)
         {
             final JPanel panel2 = new JPanel();
             panel2.setLayout(new CardLayout(0, 0));
-            tabbedPane1.addTab("Editor "+s, panel2);
+            tabbedPane1.addTab("E:" + s, panel2);
             final JScrollPane scrollPane1 = new JScrollPane();
             panel2.add(scrollPane1, "Card1");
             MyTextArea jt = new MyTextArea();
+            enableDrops(jt);
             scrollPane1.setViewportView(jt);
-            list.add (jt);
+            list.add(jt);
         }
-//
-//        final JPanel panel2 = new JPanel();
-//        panel2.setLayout(new CardLayout(0, 0));
-//        tabbedPane1.addTab("Untitled", panel2);
-//        final JScrollPane scrollPane1 = new JScrollPane();
-//        panel2.add(scrollPane1, "Card1");
-//        textArea1 = new MyTextArea();
-//        scrollPane1.setViewportView(textArea1);
-//
-//        final JPanel panel3 = new JPanel();
-//        panel3.setLayout(new CardLayout(0, 0));
-//        tabbedPane1.addTab("Untitled", panel3);
-//        final JScrollPane scrollPane2 = new JScrollPane();
-//        panel3.add(scrollPane2, "Card1");
-//        textArea2 = new MyTextArea();
-//        scrollPane2.setViewportView(textArea2);
-//
-//        final JPanel panel4 = new JPanel();
-//        panel4.setLayout(new CardLayout(0, 0));
-//        tabbedPane1.addTab("Untitled", panel4);
-//        final JScrollPane scrollPane3 = new JScrollPane();
-//        panel4.add(scrollPane3, "Card1");
-//        textArea3 = new MyTextArea();
-//        scrollPane3.setViewportView(textArea3);
     }
 }
 

@@ -5,7 +5,7 @@ import java.awt.*;
  * A font selection dialog.
  * <p>
  * Note: can take a long time to start up on systems with (literally) hundreds
- * of fonts. TODO change list to JList, add a SelectionChangedListener to
+ * of fonts.
  * preview.
  *
  * @author Ian Darwin
