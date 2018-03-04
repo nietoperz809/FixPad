@@ -15,23 +15,36 @@ import java.awt.event.MouseEvent;
 public class BlockCaret extends DefaultCaret
 {
     private static final long serialVersionUID = 1L;
-
+    private Rectangle saveRect = null;
+    private final Object lock = new Object();
+    
     public BlockCaret ()
     {
         setBlinkRate(500);
     }
 
-    protected synchronized void damage (Rectangle r)
+//    public void focusLost(FocusEvent e)
+//    {
+//    }
+
+    public void startFlashing ()
     {
-        if (r != null)
+        setVisible(true);
+        setSelectionVisible(true);
+    }
+
+    protected void damage (Rectangle r)
+    {
+        if (saveRect != null)
         {
-            JTextComponent component = getComponent();
-            x = r.x;
-            y = r.y;
-            Font font = component.getFont();
-            width = component.getFontMetrics(font).charWidth('w');
-            height = r.height;
-            repaint();
+            synchronized (lock)
+            {
+                x = saveRect.x;
+                y = saveRect.y;
+                width = saveRect.width;
+                height = saveRect.height;
+                repaint();
+            }
         }
     }
 
@@ -47,19 +60,21 @@ public class BlockCaret extends DefaultCaret
         {
             try
             {
-                JTextComponent component = getComponent();
-                Rectangle r = component.getUI().modelToView(component, getDot());
-                char cr = component.getText(getDot(),1).charAt(0);
-                if (Character.isWhitespace(cr))
-                    cr = '.';
-                FontMetrics fm = g.getFontMetrics();
-                int width = fm.charWidth(cr);
-                if (width < 1)
-                    width = 1;
-                g.setColor(component.getBackground());
-                g.setXORMode(component.getCaretColor());
-                g.fillRect(r.x, r.y, width, fm.getHeight()-2); //r.width, r.height);
-                g.setPaintMode();
+                synchronized (lock)
+                {
+                    JTextComponent component = getComponent();
+                    Rectangle r = component.getUI().modelToView(component, getDot());
+                    char cr = component.getText(getDot(), 1).charAt(0);
+                    if (Character.isWhitespace(cr))
+                        cr = '.';
+                    FontMetrics fm = g.getFontMetrics();
+                    r.width = fm.charWidth(cr);
+                    r.height = fm.getHeight();
+                    g.setColor(component.getCaretColor());
+                    g.setXORMode(component.getBackground());
+                    g.fillRect(r.x, r.y, r.width, r.height);
+                    saveRect = r;
+                }
             }
             catch (BadLocationException e)
             {

@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -24,50 +23,54 @@ public class FixPad
         setupUI();
     }
 
-    public static void main (String[] args)
+    public static void main (String[] args) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException
     {
-        JFrame frame = new JFrame("FixPad");
-        FixPad pad = new FixPad();
-        frame.addWindowListener(new WindowAdapter()
+        //UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
+        SwingUtilities.invokeLater(() ->
         {
-            @Override
-            public void windowClosing (WindowEvent e)
+            JFrame frame = new JFrame("FixPad");
+            FixPad pad = new FixPad();
+            frame.addWindowListener(new WindowAdapter()
             {
-                pad.fman.stop();
-            }
+                @Override
+                public void windowClosing (WindowEvent e)
+                {
+                    pad.fman.stop();
+                }
+            });
+            frame.setContentPane(pad.panel1);
+            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            frame.setSize(1000, 600);
+            pad.startFman();
+            frame.setVisible(true);
         });
-        frame.setContentPane(pad.panel1);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setSize(1000, 600);
-        pad.startFman();
-        frame.setVisible(true);
     }
 
     private void startFman ()
     {
-        setDefaultAttributes();
+        //setDefaultAttributes();
         fman.put(list);
         fman.start();
     }
 
-    private void setDefaultAttributes ()
-    {
-        for (MyTextArea ta : list)
-        {
-            ta.setBackground(new Color(12, 14, 16));
-            ta.setForeground(Color.WHITE);
-            Font f = Tools.getFont("Consolas", -1, 20, ta.getFont());
-            if (f != null)
-            {
-                ta.setFont(f);
-            }
-            BlockCaret mc = new BlockCaret();
-            mc.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-            ta.setCaret(mc);
-            ta.setCaretColor(Color.ORANGE);
-            ta.addMouseListener(new PopupMenuHandler(ta));
-        }
-    }
+//    private void setDefaultAttributes ()
+//    {
+//        for (MyTextArea ta : list)
+//        {
+//            ta.setBackground(new Color(12, 14, 16));
+//            ta.setForeground(Color.WHITE);
+//            Font f = Tools.getFont("Consolas", -1, 20, ta.getFont());
+//            if (f != null)
+//            {
+//                ta.setFont(f);
+//            }
+//            BlockCaret mc = new BlockCaret();
+//            ta.setCaret(mc);
+//            mc.startFlashing();
+//            ta.setCaretColor(Color.ORANGE);
+//            ta.addMouseListener(new PopupMenuHandler(ta));
+//        }
+//    }
 
     private void enableDrops (MyTextArea jt)
     {
@@ -120,6 +123,19 @@ public class FixPad
             enableDrops(jt);
             scrollPane1.setViewportView(jt);
             list.add(jt);
+
+            jt.setBackground(new Color(12, 14, 16));
+            jt.setForeground(Color.WHITE);
+            Font f = Tools.getFont("Consolas", -1, 20, jt.getFont());
+            if (f != null)
+            {
+                jt.setFont(f);
+            }
+            BlockCaret mc = new BlockCaret();
+            jt.setCaret(mc);
+            mc.startFlashing();
+            jt.setCaretColor(Color.ORANGE);
+            jt.addMouseListener(new PopupMenuHandler(jt));
         }
     }
 }
