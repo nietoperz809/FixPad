@@ -1,3 +1,4 @@
+import crypto.Crypto;
 import transform.*;
 
 import javax.swing.*;
@@ -51,7 +52,49 @@ public class PopupMenuHandler extends MouseInputAdapter
                 try
                 {
                     byte[] pwh = Crypto.passwordHash(pass.getBytes("UTF-8"));
-                    String s = Crypto.ecryptFilePeter1(pwh, ta.getText());
+                    String s = Crypto.cryptFilePeter1(pwh, ta.getText());
+                    ta.setText(s);
+                }
+                catch (Exception e1)
+                {
+                    System.out.println(e1);
+                }
+            }
+        });
+        men.add(menuItem);
+
+        menuItem = new JMenuItem("AES Encrypt");
+        menuItem.addActionListener(e ->
+        {
+            ta.push();
+            String pass = new SingleInputDialog().start("Enter Password");
+            if (!pass.isEmpty())
+            {
+                try
+                {
+                    byte[] pwh = Crypto.passwordHash(pass.getBytes("UTF-8"));
+                    String s = Crypto.cryptAes256 (true, pwh, ta.getText());
+                    ta.setText(s);
+                }
+                catch (Exception e1)
+                {
+                    System.out.println(e1);
+                }
+            }
+        });
+        men.add(menuItem);
+
+        menuItem = new JMenuItem("AES Decrypt");
+        menuItem.addActionListener(e ->
+        {
+            ta.push();
+            String pass = new SingleInputDialog().start("Enter Password");
+            if (!pass.isEmpty())
+            {
+                try
+                {
+                    byte[] pwh = Crypto.passwordHash(pass.getBytes("UTF-8"));
+                    String s = Crypto.cryptAes256 (false, pwh, ta.getText());
                     ta.setText(s);
                 }
                 catch (Exception e1)

@@ -1,3 +1,5 @@
+package crypto;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -119,11 +121,8 @@ public class Crypto
         return chars2;
     }
 
-    public static String ecryptFilePeter1 (byte[] key, String in) throws Exception
+    public static String cryptFilePeter1 (byte[] key, String in) throws Exception
     {
-//        File fileIn = new File (in);
-//        FileInputStream fin = new FileInputStream(fileIn);
-//        FileOutputStream fout = new FileOutputStream (out);
         byte[] buff;
         byte[] all = toRawByteArray(in);
         int size = all.length;
@@ -151,4 +150,28 @@ public class Crypto
         return sb.toString();
     }
 
+    public static String cryptAes256(boolean mode, byte[] key, String in) throws Exception
+    {
+        StringBuilder inBuilder = new StringBuilder(in);
+        while (inBuilder.length()%8 != 0)
+            inBuilder.append('.');
+
+        byte[] buff = new byte[16];
+        byte[] all = toRawByteArray(inBuilder.toString());
+        int pos = 0;
+        StringBuffer outbuffer = new StringBuffer();
+
+        AESEngine aes = new AESEngine();
+        aes.init (mode, key);
+        for (;;)
+        {
+            aes.processBlock (all, pos, buff, 0);
+            pos += 16;
+            char[] chars = fromRawByteArray(buff);
+            outbuffer.append (chars);
+            if (pos == all.length)
+                break;
+        }
+        return outbuffer.toString();
+    }
 }
