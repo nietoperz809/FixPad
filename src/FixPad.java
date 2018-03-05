@@ -133,7 +133,7 @@ public class FixPad
             }
             BlockCaret mc = new BlockCaret();
             jt.setCaret(mc);
-            mc.startFlashing();
+            //mc.startFlashing();
             jt.setCaretColor(Color.ORANGE);
             jt.addMouseListener(new PopupMenuHandler(jt));
         }

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="SingleInputDialog">
+  <grid id="cbd77" binding="contentPane" layout-manager="BorderLayout" hgap="0" vgap="0">
+    <constraints>
+      <xy x="48" y="54" width="392" height="297"/>
+    </constraints>
+    <properties>
+      <background color="-16777216"/>
+      <preferredSize width="300" height="100"/>
+      <requestFocusEnabled value="false"/>
+    </properties>
+    <border type="none"/>
+    <children>
+      <grid id="9d587" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+        <constraints border-constraint="South"/>
+        <properties>
+          <background color="-16777216"/>
+          <preferredSize width="200" height="50"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="e7465" class="javax.swing.JButton" binding="buttonOK">
+            <constraints/>
+            <properties>
+              <preferredSize width="100" height="31"/>
+              <text value="OK"/>
+            </properties>
+          </component>
+          <component id="5b699" class="javax.swing.JLabel">
+            <constraints/>
+            <properties>
+              <preferredSize width="30" height="10"/>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="5723f" class="javax.swing.JButton" binding="buttonCancel">
+            <constraints/>
+            <properties>
+              <preferredSize width="100" height="31"/>
+              <text value="Cancel"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <component id="2cbd1" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+        <constraints border-constraint="Center"/>
+        <properties>
+          <background color="-15987184"/>
+          <font name="Arial" size="20"/>
+          <foreground color="-1"/>
+          <horizontalAlignment value="0"/>
+          <opaque value="false"/>
+          <preferredSize width="300" height="50"/>
+        </properties>
+      </component>
+      <component id="d0a59" class="javax.swing.JLabel">
+        <constraints border-constraint="West"/>
+        <properties>
+          <preferredSize width="11" height="11"/>
+          <text value=" "/>
+        </properties>
+      </component>
+      <component id="e96d7" class="javax.swing.JLabel">
+        <constraints border-constraint="East"/>
+        <properties>
+          <preferredSize width="11" height="11"/>
+          <text value=" "/>
+        </properties>
+      </component>
+      <component id="2c517" class="javax.swing.JLabel">
+        <constraints border-constraint="North"/>
+        <properties>
+          <preferredSize width="11" height="11"/>
+          <text value=""/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>

@@ -10,6 +10,7 @@ public class Settings implements Serializable
     private Color fgcol;
     private Color bkcol;
     private int carpos;
+    private boolean linewrap;
 
     private final static String fname
             = System.getProperty("user.home") + File.separator + "FPsettings";
@@ -25,6 +26,7 @@ public class Settings implements Serializable
             st.fgcol = jt.getForeground();
             st.bkcol = jt.getBackground();
             st.carpos = jt.getCaretPosition();
+            st.linewrap = jt.getLineWrap();
             ow.putObject(st);
         }
         ow.close();
@@ -43,6 +45,7 @@ public class Settings implements Serializable
                 jt.setForeground(st.fgcol);
                 jt.setBackground(st.bkcol);
                 jt.setCaretPosition(st.carpos);
+                jt.setLineWrap(st.linewrap);
                 jt.requestFocusInWindow();
             }
             or.close();

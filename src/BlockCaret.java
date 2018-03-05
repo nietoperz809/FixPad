@@ -15,23 +15,19 @@ import java.awt.event.MouseEvent;
 public class BlockCaret extends DefaultCaret
 {
     private static final long serialVersionUID = 1L;
-    private Rectangle saveRect = null;
     private final Object lock = new Object();
-    
+    private Rectangle saveRect = null;
+
     public BlockCaret ()
     {
         setBlinkRate(500);
     }
 
-//    public void focusLost(FocusEvent e)
+//    public void startFlashing ()
 //    {
+//        setVisible(true);
+//        setSelectionVisible(true);
 //    }
-
-    public void startFlashing ()
-    {
-        setVisible(true);
-        setSelectionVisible(true);
-    }
 
     protected void damage (Rectangle r)
     {
@@ -58,15 +54,17 @@ public class BlockCaret extends DefaultCaret
     {
         if (isVisible())
         {
-            try
+            synchronized (lock)
             {
-                synchronized (lock)
+                try
                 {
                     JTextComponent component = getComponent();
                     Rectangle r = component.getUI().modelToView(component, getDot());
                     char cr = component.getText(getDot(), 1).charAt(0);
                     if (Character.isWhitespace(cr))
+                    {
                         cr = '.';
+                    }
                     FontMetrics fm = g.getFontMetrics();
                     r.width = fm.charWidth(cr);
                     r.height = fm.getHeight();
@@ -75,10 +73,10 @@ public class BlockCaret extends DefaultCaret
                     g.fillRect(r.x, r.y, r.width, r.height);
                     saveRect = r;
                 }
-            }
-            catch (BadLocationException e)
-            {
-                e.printStackTrace();
+                catch (BadLocationException e)
+                {
+                    e.printStackTrace();
+                }
             }
         }
     }
