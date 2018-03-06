@@ -150,16 +150,38 @@ public class Crypto
         return sb.toString();
     }
 
+    /**
+     * Enc/De-crypts a String with AES256
+     * @param mode true == encrypt, false == decrypt
+     * @param key AES-compatible key, always 32 bytes
+     * @param in input string
+     * @return transformed string
+     * @throws Exception if smth. gone wrong
+     */
     public static String cryptAes256(boolean mode, byte[] key, String in) throws Exception
     {
+        StringBuffer outbuffer = new StringBuffer();
         StringBuilder inBuilder = new StringBuilder(in);
-        while (inBuilder.length()%8 != 0)
-            inBuilder.append('.');
+        char paddingChars;
+        if (mode)
+        {
+            paddingChars = 0;
+            while (inBuilder.length() % 8 != 0)
+            {
+                paddingChars++;
+                inBuilder.append('.');
+            }
+            outbuffer.append(paddingChars);
+        }
+        else
+        {
+            paddingChars = inBuilder.charAt(0);
+            inBuilder.deleteCharAt(0);
+        }
 
         byte[] buff = new byte[16];
         byte[] all = toRawByteArray(inBuilder.toString());
         int pos = 0;
-        StringBuffer outbuffer = new StringBuffer();
 
         AESEngine aes = new AESEngine();
         aes.init (mode, key);
@@ -172,6 +194,8 @@ public class Crypto
             if (pos == all.length)
                 break;
         }
+        if (!mode) // decryption: remove padding
+            outbuffer.setLength(outbuffer.length()-paddingChars);
         return outbuffer.toString();
     }
 }

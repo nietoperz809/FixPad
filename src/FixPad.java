@@ -112,14 +112,15 @@ public class FixPad
         JTabbedPane tabbedPane1 = new JTabbedPane();
         panel1.add(tabbedPane1, BorderLayout.CENTER);
 
-        for (int s = 0; s < 21; s++)
+        for (int index = 0; index < 21; index++)
         {
             final JPanel panel2 = new JPanel();
             panel2.setLayout(new CardLayout(0, 0));
-            tabbedPane1.addTab("E:" + s, panel2);
+            tabbedPane1.addTab("E:" + index, panel2);
             final JScrollPane scrollPane1 = new JScrollPane();
             panel2.add(scrollPane1, "Card1");
             MyTextArea jt = new MyTextArea();
+            jt.setTabData(tabbedPane1, index);
             enableDrops(jt);
             scrollPane1.setViewportView(jt);
             list.add(jt);
@@ -137,6 +138,7 @@ public class FixPad
             jt.setCaretColor(Color.ORANGE);
             jt.addMouseListener(new PopupMenuHandler(jt));
         }
+        //tabbedPane1.setTitleAt(0,"fuck");
     }
 }
 

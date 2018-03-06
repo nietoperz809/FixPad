@@ -33,6 +33,9 @@ public class SingleInputDialog extends JDialog
         contentPane.registerKeyboardAction(e -> onCancel(),
                 KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
                 JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+        setModal(true);
+        textField1.requestFocusInWindow();
     }
 
     private void onOK ()
@@ -47,18 +50,15 @@ public class SingleInputDialog extends JDialog
         dispose();
     }
 
-    public String start (String title)
+    public String start (String title, String defaultval)
     {
+        textField1.setCaret(new BlockCaret());
+        textField1.setCaretColor(Color.YELLOW);
+        textField1.setText(defaultval);
         setTitle(title);
         pack();
         setVisible(true);
         return textField1.getText();
-    }
-
-    public static void main (String[] args)
-    {
-        String s = new SingleInputDialog().start("Enter Password");
-        System.out.println(s);
     }
 
     {
@@ -101,7 +101,7 @@ public class SingleInputDialog extends JDialog
         panel1.add(buttonCancel);
         textField1 = new JTextField();
         textField1.setBackground(new Color(-15987184));
-        Font textField1Font = this.$$$getFont$$$("Arial", -1, 20, textField1.getFont());
+        Font textField1Font = Tools.getFont("Arial", -1, 20, textField1.getFont());
         if (textField1Font != null)
         {
             textField1.setFont(textField1Font);
@@ -128,37 +128,15 @@ public class SingleInputDialog extends JDialog
     /**
      * @noinspection ALL
      */
-    private Font $$$getFont$$$ (String fontName, int style, int size, Font currentFont)
-    {
-        if (currentFont == null)
-        {
-            return null;
-        }
-        String resultName;
-        if (fontName == null)
-        {
-            resultName = currentFont.getName();
-        }
-        else
-        {
-            Font testFont = new Font(fontName, Font.PLAIN, 10);
-            if (testFont.canDisplay('a') && testFont.canDisplay('1'))
-            {
-                resultName = fontName;
-            }
-            else
-            {
-                resultName = currentFont.getName();
-            }
-        }
-        return new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
-    }
-
-    /**
-     * @noinspection ALL
-     */
     public JComponent $$$getRootComponent$$$ ()
     {
         return contentPane;
     }
+
+    //    public static void main (String[] args)
+//    {
+//        String s = new SingleInputDialog().start("Enter Password");
+//        System.out.println(s);
+//    }
+
 }

@@ -48,7 +48,9 @@ public class TextAreaTools
         int num = 1;
         for (String s : list)
         {
-            sb.append(num++).append(". ").append(s);
+            String s2 = Tools.ensureMinLength(num+". ", 5);
+            sb.append(s2).append(s);
+            num++;
         }
         ta.setText(sb.toString());
     }
@@ -65,6 +67,7 @@ public class TextAreaTools
         for (String s : list)
         {
             String rnum = RomanNumber.toRoman(num++);
+            rnum = Tools.ensureMinLength(rnum, 10);
             sb.append(rnum).append(". ").append(s);
         }
         ta.setText(sb.toString());

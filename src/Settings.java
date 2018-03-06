@@ -11,6 +11,7 @@ public class Settings implements Serializable
     private Color bkcol;
     private int carpos;
     private boolean linewrap;
+    private String tabTitle;
 
     private final static String fname
             = System.getProperty("user.home") + File.separator + "FPsettings";
@@ -27,6 +28,7 @@ public class Settings implements Serializable
             st.bkcol = jt.getBackground();
             st.carpos = jt.getCaretPosition();
             st.linewrap = jt.getLineWrap();
+            st.tabTitle = jt.getTpane().getTitleAt(jt.getTabIndex());
             ow.putObject(st);
         }
         ow.close();
@@ -46,7 +48,10 @@ public class Settings implements Serializable
                 jt.setBackground(st.bkcol);
                 jt.setCaretPosition(st.carpos);
                 jt.setLineWrap(st.linewrap);
-                jt.requestFocusInWindow();
+                jt.setWrapStyleWord(true);
+                jt.getTpane().setTitleAt(jt.getTabIndex(), st.tabTitle);
+
+                //jt.requestFocusInWindow();
             }
             or.close();
         }

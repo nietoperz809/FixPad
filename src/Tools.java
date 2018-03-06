@@ -74,4 +74,17 @@ public class Tools
         return -1;
     }
 
+    public static String ensureMinLength (String in, int min)
+    {
+        StringBuilder inBuilder = new StringBuilder(in);
+        return ensureMinLength(inBuilder, min);
+    }
+
+    public static String ensureMinLength (StringBuilder in, int min)
+    {
+        while (in.length() < min)
+            in.insert (0,' ');
+        return in.toString();
+    }
+
 }
