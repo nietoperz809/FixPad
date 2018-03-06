@@ -37,6 +37,44 @@ public class TextAreaTools
         return list;
     }
 
+    public static void trimLines(MyTextArea ta)
+    {
+        ArrayList<String> list = TaLinesToList(ta);
+        StringBuilder sb = new StringBuilder();
+        for (String s : list)
+        {
+            if (Tools.isNullOrWhiteSpace(s))
+                continue;
+            sb.append(s.trim()).append('\n');
+        }
+        sb.deleteCharAt(sb.length()-1);
+        ta.setText(sb.toString());
+    }
+
+    public static void removeLeft (MyTextArea ta, int num)
+    {
+        ArrayList<String> list = TaLinesToList(ta);
+        StringBuilder sb = new StringBuilder();
+        for (String s : list)
+        {
+            if (s.length() > num)
+                s = s.substring(num);
+            sb.append(s);
+        }
+        ta.setText(sb.toString());
+    }
+
+    public static void insertLeft (MyTextArea ta, String add)
+    {
+        ArrayList<String> list = TaLinesToList(ta);
+        StringBuilder sb = new StringBuilder();
+        for (String s : list)
+        {
+            sb.append(add).append(s);
+        }
+        ta.setText(sb.toString());
+    }
+
     /**
      * Put a line number in front of every Line
      * @param ta Textarea that is changed

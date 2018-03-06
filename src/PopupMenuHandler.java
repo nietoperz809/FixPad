@@ -4,6 +4,7 @@ import transform.*;
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 
 public class PopupMenuHandler extends MouseInputAdapter
@@ -12,76 +13,43 @@ public class PopupMenuHandler extends MouseInputAdapter
 
     PopupMenuHandler (MyTextArea ta)
     {
-        JMenuItem menuItem;
-
-        menuItem = new JMenuItem("Copy");
-        menuItem.addActionListener(e ->
-        {
-            ta.copy();
-        });
-        popup.add(menuItem);
-
-        menuItem = new JMenuItem("Paste");
-        menuItem.addActionListener(e ->
-        {
-            ta.paste();
-        });
-        popup.add(menuItem);
-
-        menuItem = new JMenuItem("Cut");
-        menuItem.addActionListener(e ->
-        {
-            ta.cut();
-        });
-        popup.add(menuItem);
-
-        menuItem = new JMenuItem("Select all");
-        menuItem.addActionListener(e ->
-        {
-            ta.selectAll();
-        });
-        popup.add(menuItem);
-
+        menuOption("Copy", popup, e -> ta.copy());
+        menuOption("Paste", popup, e -> ta.paste());
+        menuOption("Cut", popup, e -> ta.cut());
+        menuOption("Select all", popup, e -> ta.selectAll());
         popup.add(new JSeparator());
-
-        popup.add(settingSubMenu(ta,"Settings"));
+        popup.add(settingSubMenu(ta, "Settings"));
         popup.add(imageSubMenu(ta, "Image"));
         popup.add(textSubMenu(ta, "Text Manipulation"));
         popup.add(codingSubMenu(ta, "Coding"));
         popup.add(cryptoSubMenu(ta, "Crypto"));
-
         popup.add(new JSeparator());
+        menuOption("Undo", popup, e -> ta.pop());
+    }
 
-        menuItem = new JMenuItem("Undo");
-        menuItem.addActionListener(e -> ta.pop());
-        popup.add(menuItem);
+    private void menuOption (String name, JComponent men, ActionListener e)
+    {
+        JMenuItem mi = new JMenuItem(name);
+        mi.addActionListener(e);
+        men.add(mi);
     }
 
     private JMenu settingSubMenu (MyTextArea ta, String title)
     {
         JMenu men = new JMenu(title);
-        JMenuItem menuItem;
 
-        menuItem = new JMenuItem("Change tab name");
-        menuItem.addActionListener(e ->
-        {
-            String name = new SingleInputDialog().start("Tab name", "Tab:"+ta.getTabIndex());
+        menuOption("Change tab name", men, e -> {
+            String name = new SingleInputDialog().start("Tab name", "Tab:" + ta.getTabIndex());
             if (!name.isEmpty())
+            {
                 ta.getTpane().setTitleAt(ta.getTabIndex(), name);
+            }
         });
-        men.add(menuItem);
-
-        menuItem = new JMenuItem("Toggle Word Wrap");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("Toggle Word Wrap", men, e -> {
             ta.setLineWrap(!ta.getLineWrap());
             ta.setWrapStyleWord(true);
         });
-        men.add(menuItem);
-
-        menuItem = new JMenuItem("Font...");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("Font ...", men, e -> {
             final FontChooser2 fc = new FontChooser2(null);
             fc.adjustDisplay(ta.getFont());
             fc.setVisible(true);
@@ -92,34 +60,21 @@ public class PopupMenuHandler extends MouseInputAdapter
                 ta.setFont(f);
             }
         });
-        men.add(menuItem);
-
-        menuItem = new JMenuItem("Caret Color...");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("Caret Color...", men, e -> {
             Color col = JColorChooser.showDialog(null,
                     "Caret Color", null);
             ta.setCaretColor(col);
         });
-        men.add(menuItem);
-
-        menuItem = new JMenuItem("Foreground Color...");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("Foreground Color...", men, e -> {
             Color col = JColorChooser.showDialog(null,
                     "Foreground Color", null);
             ta.setForeground(col);
         });
-        men.add(menuItem);
-
-        menuItem = new JMenuItem("Background Color...");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("Background Color...", men, e -> {
             Color col = JColorChooser.showDialog(null,
                     "Background Color", null);
             ta.setBackground(col);
         });
-        men.add(menuItem);
 
         return men;
     }
@@ -127,23 +82,17 @@ public class PopupMenuHandler extends MouseInputAdapter
     private JMenu imageSubMenu (MyTextArea ta, String title)
     {
         JMenu men = new JMenu(title);
-        JMenuItem menuItem;
 
-        menuItem = new JMenuItem("Save as image");
-        menuItem.addActionListener(e ->
-        {
-            String fname = new SingleInputDialog().start("Path and name of File","c:\\TextArea.png");
+        menuOption("Save as image", men, e -> {
+            String fname = new SingleInputDialog().start("Path and name of File", "c:\\TextArea.png");
             if (!fname.isEmpty())
             {
                 TextAreaTools.saveAsImage(ta, fname);
             }
         });
-        men.add(menuItem);
-
-        menuItem = new JMenuItem("As image to clipboard");
-        menuItem.addActionListener(e ->
-                TextAreaTools.saveImageToClipboard(ta));
-        men.add(menuItem);
+        menuOption("Image to clipboard", men, e -> {
+            TextAreaTools.saveImageToClipboard(ta);
+        });
 
         return men;
     }
@@ -151,11 +100,8 @@ public class PopupMenuHandler extends MouseInputAdapter
     private JMenu textSubMenu (MyTextArea ta, String title)
     {
         JMenu men = new JMenu(title);
-        JMenuItem menuItem;
 
-        menuItem = new JMenuItem("Replace ...");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("Replace ...", men, e -> {
             ta.push();
             SearchBox.SbResult res = new SearchBox().run();
             if (res != null)
@@ -167,64 +113,64 @@ public class PopupMenuHandler extends MouseInputAdapter
                 }
             }
         });
-        men.add(menuItem);
-
-        menuItem = new JMenuItem("Center Text");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("Center Text", men, e -> {
             ta.push();
             TextAreaTools.centerText(ta);
         });
-        men.add(menuItem);
-
-        menuItem = new JMenuItem("Number Text");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("Trim Lines", men, e -> {
+            ta.push();
+            TextAreaTools.trimLines(ta);
+        });
+        menuOption("Remove left", men, e -> {
+            String s = new SingleInputDialog().start("How many chars", "");
+            try
+            {
+                int num = Integer.parseInt(s);
+                ta.push();
+                TextAreaTools.removeLeft(ta, num);
+            }
+            catch (NumberFormatException e1)
+            {
+                System.out.println(e1);
+            }
+        });
+        menuOption("Insert left", men, e -> {
+            String s = new SingleInputDialog().start("How many chars", "");
+            try
+            {
+                ta.push();
+                TextAreaTools.insertLeft(ta, s);
+            }
+            catch (NumberFormatException e1)
+            {
+                System.out.println(e1);
+            }
+        });
+        menuOption("Line Number", men, e -> {
             ta.push();
             TextAreaTools.numberText(ta);
         });
-        men.add(menuItem);
-
-        menuItem = new JMenuItem("Roman Numbering");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("Roman Line Number", men, e -> {
             ta.push();
             TextAreaTools.romanNumberText(ta);
         });
-        men.add(menuItem);
-
-        menuItem = new JMenuItem("Upcase");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("Upcase", men, e -> {
             ta.push();
             ta.setText(ta.getText().toUpperCase());
         });
-        men.add(menuItem);
-
-        menuItem = new JMenuItem("Lowcase");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("Downcase", men, e -> {
             ta.push();
             ta.setText(ta.getText().toLowerCase());
         });
-        men.add(menuItem);
-
-        menuItem = new JMenuItem("Capitalize");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("Capitalize", men, e -> {
             ta.push();
             TextAreaTools.capitalize(ta);
         });
-        men.add(menuItem);
-
-        menuItem = new JMenuItem("Reverse");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("Reverse", men, e -> {
             ta.push();
             String rev = new StringBuilder(ta.getText()).reverse().toString();
             ta.setText(rev);
         });
-        men.add(menuItem);
 
         return men;
     }
@@ -232,141 +178,76 @@ public class PopupMenuHandler extends MouseInputAdapter
     private JMenu codingSubMenu (MyTextArea ta, String title)
     {
         JMenu men = new JMenu(title);
-        JMenuItem menuItem;
 
-        menuItem = new JMenuItem("SHA-256");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("SHA-256", men, e -> {
             ta.push();
             String st = new SHA256().transform(ta.getText());
             ta.append("\n" + st);
         });
-        men.add(menuItem);
-
-        menuItem = new JMenuItem("SHA-1");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("SHA-1", men, e -> {
             ta.push();
             String st = new SHA1().transform(ta.getText());
             ta.append("\n" + st);
         });
-        men.add(menuItem);
-
-        menuItem = new JMenuItem("MD4");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("MD4", men, e -> {
             ta.push();
             String st = new MD4().transform(ta.getText());
             ta.append("\n" + st);
         });
-        men.add(menuItem);
-
-        menuItem = new JMenuItem("MD5");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("MD5", men, e -> {
             ta.push();
             String st = new MD5().transform(ta.getText());
             ta.append("\n" + st);
         });
-        men.add(menuItem);
-
-        menuItem = new JMenuItem("CRC16");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("CRC16", men, e -> {
             ta.push();
             String st = new CRC16CCITT().transform(ta.getText());
             ta.append("\n" + st);
         });
-        men.add(menuItem);
-
         men.add(new JSeparator());
-
-        menuItem = new JMenuItem("HagelinEncrypt");
-        menuItem.addActionListener(e ->
-        {
-            ta.push();
-            String st = new HagelinCrypt().transform(ta.getText());
-            ta.setText(st);
-        });
-        men.add(menuItem);
-
-        menuItem = new JMenuItem("UrlEncode");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("UrlEncode", men, e -> {
             ta.push();
             String st = new UrlEncodeUTF8().transform(ta.getText());
             ta.setText(st);
         });
-        men.add(menuItem);
-
-        menuItem = new JMenuItem("UrlDecode");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("UrlDecode", men, e -> {
             ta.push();
             String st = new UrlEncodeUTF8().retransform(ta.getText());
             ta.setText(st);
         });
-        men.add(menuItem);
-
         men.add(new JSeparator());
-
-        menuItem = new JMenuItem("Rot13");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("Rot13", men, e -> {
             ta.push();
             String st = new Rot13().transform(ta.getText());
             ta.setText(st);
         });
-        men.add(menuItem);
-
-        menuItem = new JMenuItem("Reverse Rot13");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("Reverse Rot13", men, e -> {
             ta.push();
             String st = new Rot13().retransform(ta.getText());
             ta.setText(st);
         });
-        men.add(menuItem);
-
         men.add(new JSeparator());
-
-        menuItem = new JMenuItem("Base64");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("Base64", men, e -> {
             ta.push();
             String st = new Base64().transform(ta.getText());
             ta.setText(st);
         });
-        men.add(menuItem);
-
-        menuItem = new JMenuItem("Reverse Base64");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("Reverse Base64", men, e -> {
             ta.push();
             String st = new Base64().retransform(ta.getText());
             ta.setText(st);
         });
-        men.add(menuItem);
-
         men.add(new JSeparator());
-
-        menuItem = new JMenuItem("GrayEncode");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("GrayEncode", men, e -> {
             ta.push();
             String st = new GrayCode().transform(ta.getText());
             ta.setText(st);
         });
-        men.add(menuItem);
-
-        menuItem = new JMenuItem("GrayDecode");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("GrayDecode", men, e -> {
             ta.push();
             String st = new GrayCode().retransform(ta.getText());
             ta.setText(st);
         });
-        men.add(menuItem);
 
         return men;
     }
@@ -374,42 +255,25 @@ public class PopupMenuHandler extends MouseInputAdapter
     private JMenu cryptoSubMenu (MyTextArea ta, String title)
     {
         JMenu men = new JMenu(title);
-        JMenuItem menuItem;
 
-        menuItem = new JMenuItem("HagelinCrypt");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("HagelinEncrypt", men, e -> {
             ta.push();
-            String st = new HagelinCrypt().retransform(ta.getText());
+            String st = new HagelinCrypt().transform(ta.getText());
             ta.setText(st);
         });
-        men.add(menuItem);
-
         men.add(new JSeparator());
-
-        menuItem = new JMenuItem("Pitti1Encrypt");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("Pitti1-Encrypt", men, e -> {
             ta.push();
             String st = new Pitti1Crypt().transform(ta.getText());
             ta.setText(st);
         });
-        men.add(menuItem);
-
-        menuItem = new JMenuItem("Pitti1Decrypt");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("Pitti1-Decrypt", men, e -> {
             ta.push();
             String st = new Pitti1Crypt().retransform(ta.getText());
             ta.setText(st);
         });
-        men.add(menuItem);
-
         men.add(new JSeparator());
-
-        menuItem = new JMenuItem("Peter1Crypt");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("Peter1Crypt", men, e -> {
             ta.push();
             String pass = new SingleInputDialog().start("Enter Password", "");
             if (!pass.isEmpty())
@@ -426,13 +290,8 @@ public class PopupMenuHandler extends MouseInputAdapter
                 }
             }
         });
-        men.add(menuItem);
-
         men.add(new JSeparator());
-
-        menuItem = new JMenuItem("AES Encrypt");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("AES Encrypt", men, e -> {
             ta.push();
             String pass = new SingleInputDialog().start("Enter Password", "");
             if (!pass.isEmpty())
@@ -449,11 +308,7 @@ public class PopupMenuHandler extends MouseInputAdapter
                 }
             }
         });
-        men.add(menuItem);
-
-        menuItem = new JMenuItem("AES Decrypt");
-        menuItem.addActionListener(e ->
-        {
+        menuOption("AES Decrypt", men, e -> {
             ta.push();
             String pass = new SingleInputDialog().start("Enter Password", "");
             if (!pass.isEmpty())
@@ -470,7 +325,6 @@ public class PopupMenuHandler extends MouseInputAdapter
                 }
             }
         });
-        men.add(menuItem);
 
         return men;
     }

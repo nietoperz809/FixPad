@@ -87,4 +87,8 @@ public class Tools
         return in.toString();
     }
 
+    public static boolean isNullOrWhiteSpace(String value)
+    {
+        return value == null || value.trim().isEmpty();
+    }
 }
