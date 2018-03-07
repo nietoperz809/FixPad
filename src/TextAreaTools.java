@@ -1,4 +1,3 @@
-import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
@@ -6,6 +5,7 @@ import java.awt.print.Paper;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class TextAreaTools
 {
@@ -14,28 +14,36 @@ public class TextAreaTools
      * @param ta TextArea
      * @return List of Lines
      */
+//    public static ArrayList<String> TaLinesToList (MyTextArea ta)
+//    {
+//        int lines = ta.getLineCount();
+//        ArrayList<String> list = new ArrayList<>();
+//        try
+//        {
+//            for (int i = 0; i < lines; i++)
+//            {
+//                int start = ta.getLineStartOffset(i);
+//                int end = ta.getLineEndOffset(i);
+//
+//                String line = ta.getText(start, end - start);
+//                        //.replace("\n","");
+//                list.add (line);
+//            }
+//        }
+//        catch (BadLocationException e)
+//        {
+//            System.out.println(e);
+//        }
+//        return list;
+//    }
     public static ArrayList<String> TaLinesToList (MyTextArea ta)
     {
-        int lines = ta.getLineCount();
         ArrayList<String> list = new ArrayList<>();
-        try
-        {
-            for (int i = 0; i < lines; i++)
-            {
-                int start = ta.getLineStartOffset(i);
-                int end = ta.getLineEndOffset(i);
-
-                String line = ta.getText(start, end - start);
-                        //.replace("\n","");
-                list.add (line);
-            }
-        }
-        catch (BadLocationException e)
-        {
-            System.out.println(e);
-        }
+        String[] lines = ta.getText().split("\\n");
+        Collections.addAll(list, lines);
         return list;
     }
+
 
     public static void trimLines(MyTextArea ta)
     {
@@ -141,11 +149,16 @@ public class TextAreaTools
      */
     public static void centerText (MyTextArea ta)
     {
-        BufferedImage fake1 = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D fake2 = fake1.createGraphics();
-        FontMetrics fm = fake2.getFontMetrics(ta.getFont());
+        FontMetrics fm = getFontMetrics(ta);
         ArrayList<String> list = TaLinesToList(ta);
         alignLines (list, fm, ta);
+    }
+
+    private static FontMetrics getFontMetrics (MyTextArea ta)
+    {
+        BufferedImage fake1 = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D fake2 = fake1.createGraphics();
+       return fake2.getFontMetrics(ta.getFont());
     }
 
     /**
