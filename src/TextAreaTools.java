@@ -4,8 +4,6 @@ import java.awt.print.PageFormat;
 import java.awt.print.Paper;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
-import java.util.ArrayList;
-import java.util.Collections;
 
 public class TextAreaTools
 {
@@ -36,18 +34,15 @@ public class TextAreaTools
 //        }
 //        return list;
 //    }
-    public static ArrayList<String> TaLinesToList (MyTextArea ta)
+    public static String[] TaLinesToList (MyTextArea ta)
     {
-        ArrayList<String> list = new ArrayList<>();
-        String[] lines = ta.getText().split("\\n");
-        Collections.addAll(list, lines);
-        return list;
+        return ta.getText().split("\\n");
     }
 
 
     public static void trimLines(MyTextArea ta)
     {
-        ArrayList<String> list = TaLinesToList(ta);
+        String[] list = TaLinesToList(ta);
         StringBuilder sb = new StringBuilder();
         for (String s : list)
         {
@@ -61,24 +56,24 @@ public class TextAreaTools
 
     public static void removeLeft (MyTextArea ta, int num)
     {
-        ArrayList<String> list = TaLinesToList(ta);
+        String[] list = TaLinesToList(ta);
         StringBuilder sb = new StringBuilder();
         for (String s : list)
         {
             if (s.length() > num)
                 s = s.substring(num);
-            sb.append(s);
+            sb.append(s).append('\n');
         }
         ta.setText(sb.toString());
     }
 
     public static void insertLeft (MyTextArea ta, String add)
     {
-        ArrayList<String> list = TaLinesToList(ta);
+        String[] list = TaLinesToList(ta);
         StringBuilder sb = new StringBuilder();
         for (String s : list)
         {
-            sb.append(add).append(s);
+            sb.append(add).append(s).append('\n');
         }
         ta.setText(sb.toString());
     }
@@ -89,13 +84,13 @@ public class TextAreaTools
      */
     public static void numberText (MyTextArea ta)
     {
-        ArrayList<String> list = TaLinesToList(ta);
+        String[] list = TaLinesToList(ta);
         StringBuffer sb = new StringBuffer();
         int num = 1;
         for (String s : list)
         {
             String s2 = Tools.ensureMinLength(num+". ", 5);
-            sb.append(s2).append(s);
+            sb.append(s2).append(s).append('\n');
             num++;
         }
         ta.setText(sb.toString());
@@ -107,21 +102,21 @@ public class TextAreaTools
      */
     public static void romanNumberText (MyTextArea ta)
     {
-        ArrayList<String> list = TaLinesToList(ta);
+        String[] list = TaLinesToList(ta);
         StringBuffer sb = new StringBuffer();
         int num = 1;
         for (String s : list)
         {
             String rnum = RomanNumber.toRoman(num++);
             rnum = Tools.ensureMinLength(rnum, 10);
-            sb.append(rnum).append(". ").append(s);
+            sb.append(rnum).append(". ").append(s).append('\n');
         }
         ta.setText(sb.toString());
     }
 
     public static void capitalize (MyTextArea ta)
     {
-        ArrayList<String> list = TaLinesToList(ta);
+        String[] list = TaLinesToList(ta);
         StringBuffer sb = new StringBuffer();
         for (String s : list)
         {
@@ -138,7 +133,7 @@ public class TextAreaTools
                     }
                 }
             }
-            sb.append (b2);
+            sb.append (b2).append('\n');
         }
         ta.setText(sb.toString());
     }
@@ -150,7 +145,7 @@ public class TextAreaTools
     public static void centerText (MyTextArea ta)
     {
         FontMetrics fm = getFontMetrics(ta);
-        ArrayList<String> list = TaLinesToList(ta);
+        String[] list = TaLinesToList(ta);
         alignLines (list, fm, ta);
     }
 
@@ -167,25 +162,24 @@ public class TextAreaTools
      * @param fm Fontmetrics to calculate line length
      * @param ta TextArea that is changed
      */
-    private static void alignLines (ArrayList<String> list, FontMetrics fm, MyTextArea ta)
+    private static void alignLines (String[] list, FontMetrics fm, MyTextArea ta)
     {
         String leading = "      ";
         int longest = -1;
-        for (int n=0; n<list.size(); n++)
+        for (int n=0; n<list.length; n++)
         {
-            String s = list.get(n).replace("\n","").trim();
-            list.set(n, s);
-            if (fm.stringWidth(s) > longest)
-                longest = fm.stringWidth(s);
+            list[n] = list[n].trim();
+            if (fm.stringWidth(list[n]) > longest)
+                longest = fm.stringWidth(list[n]);
         }
-        for (int n=0; n<list.size(); n++)
+        for (int n=0; n<list.length; n++)
         {
-            String s = list.get(n);
+            String s = list[n];
             if (fm.stringWidth(s) >= longest)
                 continue;
             while (fm.stringWidth(s) < longest)
                 s = ' '+s+' ';
-            list.set(n, s);
+            list[n]=s;
         }
         StringBuilder sb = new StringBuilder();
         for (String s : list)
