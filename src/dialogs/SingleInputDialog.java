@@ -1,3 +1,9 @@
+package dialogs;
+
+import common.BlockCaret;
+import common.FixPad;
+import common.Tools;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -36,6 +42,7 @@ public class SingleInputDialog extends JDialog
 
         setModal(true);
         textField1.requestFocusInWindow();
+        setLocationRelativeTo(FixPad.mainFrame);
     }
 
     private void onOK ()

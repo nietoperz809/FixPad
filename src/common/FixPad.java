@@ -1,3 +1,5 @@
+package common;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -23,14 +25,16 @@ public class FixPad
         setupUI();
     }
 
+    public static JFrame mainFrame;
+
     public static void main (String[] args)
     {
         //UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
         SwingUtilities.invokeLater(() ->
         {
-            JFrame frame = new JFrame("FixPad");
+            mainFrame = new JFrame("FixPad");
             FixPad pad = new FixPad();
-            frame.addWindowListener(new WindowAdapter()
+            mainFrame.addWindowListener(new WindowAdapter()
             {
                 @Override
                 public void windowClosing (WindowEvent e)
@@ -38,11 +42,9 @@ public class FixPad
                     pad.fman.stop();
                 }
             });
-            frame.setContentPane(pad.panel1);
-            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            frame.setSize(1000, 600);
+            mainFrame.setContentPane(pad.panel1);
+            mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             pad.startFman();
-            frame.setVisible(true);
         });
     }
 
@@ -52,25 +54,6 @@ public class FixPad
         fman.put(list);
         fman.start();
     }
-
-//    private void setDefaultAttributes ()
-//    {
-//        for (MyTextArea ta : list)
-//        {
-//            ta.setBackground(new Color(12, 14, 16));
-//            ta.setForeground(Color.WHITE);
-//            Font f = Tools.getFont("Consolas", -1, 20, ta.getFont());
-//            if (f != null)
-//            {
-//                ta.setFont(f);
-//            }
-//            BlockCaret mc = new BlockCaret();
-//            ta.setCaret(mc);
-//            mc.startFlashing();
-//            ta.setCaretColor(Color.ORANGE);
-//            ta.addMouseListener(new PopupMenuHandler(ta));
-//        }
-//    }
 
     private void enableDrops (MyTextArea jt)
     {

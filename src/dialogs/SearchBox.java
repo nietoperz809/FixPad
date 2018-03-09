@@ -1,3 +1,7 @@
+package dialogs;
+
+import common.FixPad;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -36,6 +40,7 @@ public class SearchBox extends JDialog
                 KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
                 JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
         setModal(true);
+        setLocationRelativeTo(FixPad.mainFrame);
     }
 
     {
@@ -149,10 +154,10 @@ public class SearchBox extends JDialog
         return contentPane;
     }
 
-    class SbResult
+    public class SbResult
     {
-        String from;
-        String to;
+        public String from;
+        public String to;
     }
 
     private SbResult result;

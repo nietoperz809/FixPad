@@ -1,5 +1,7 @@
 package crypto;
 
+import common.Tools;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -101,30 +103,10 @@ public class Crypto
         return x;
     }
 
-    public static byte[] toRawByteArray (String in)
-    {
-        char[] chars = in.toCharArray();
-        byte[] bytes = new byte[chars.length*2];
-        for(int i=0;i<chars.length;i++)
-        {
-            bytes[i*2] = (byte) (chars[i] >> 8);
-            bytes[i*2+1] = (byte) chars[i];
-        }
-        return bytes;
-    }
-
-    public static char[] fromRawByteArray (byte[] bytes)
-    {
-        char[] chars2 = new char[bytes.length/2];
-        for(int i=0;i<chars2.length;i++)
-            chars2[i] = (char) ((bytes[i*2] << 8) + (bytes[i*2+1] & 0xFF));
-        return chars2;
-    }
-
     public static String cryptFilePeter1 (byte[] key, String in) throws Exception
     {
         byte[] buff;
-        byte[] all = toRawByteArray(in);
+        byte[] all = Tools.toRawByteArray(in);
         int size = all.length;
         int pos = 0;
         int len;
@@ -144,7 +126,7 @@ public class Crypto
 
             key = passwordHash (key);
             buff = xor(buff, key);
-            char[] chars = fromRawByteArray(buff);
+            char[] chars = Tools.fromRawByteArray(buff);
             sb.append (chars);
         }
         return sb.toString();
@@ -160,7 +142,7 @@ public class Crypto
      */
     public static String cryptAes256(boolean mode, byte[] key, String in) throws Exception
     {
-        StringBuffer outbuffer = new StringBuffer();
+        StringBuilder outbuffer = new StringBuilder();
         StringBuilder inBuilder = new StringBuilder(in);
         char paddingChars;
         if (mode)
@@ -180,7 +162,7 @@ public class Crypto
         }
 
         byte[] buff = new byte[16];
-        byte[] all = toRawByteArray(inBuilder.toString());
+        byte[] all = Tools.toRawByteArray(inBuilder.toString());
         int pos = 0;
 
         AESEngine aes = new AESEngine();
@@ -189,7 +171,7 @@ public class Crypto
         {
             aes.processBlock (all, pos, buff, 0);
             pos += 16;
-            char[] chars = fromRawByteArray(buff);
+            char[] chars = Tools.fromRawByteArray(buff);
             outbuffer.append (chars);
             if (pos == all.length)
                 break;

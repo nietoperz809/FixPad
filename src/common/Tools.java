@@ -1,3 +1,5 @@
+package common;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -6,7 +8,7 @@ import java.io.IOException;
 
 public class Tools
 {
-    static Font getFont (String fontName, int style, int size, Font currentFont)
+    public static Font getFont (String fontName, int style, int size, Font currentFont)
     {
         if (currentFont == null)
         {
@@ -90,5 +92,25 @@ public class Tools
     public static boolean isNullOrWhiteSpace(String value)
     {
         return value == null || value.trim().isEmpty();
+    }
+
+    public static byte[] toRawByteArray (String in)
+    {
+        char[] chars = in.toCharArray();
+        byte[] bytes = new byte[chars.length*2];
+        for(int i=0;i<chars.length;i++)
+        {
+            bytes[i*2] = (byte) (chars[i] >> 8);
+            bytes[i*2+1] = (byte) chars[i];
+        }
+        return bytes;
+    }
+
+    public static char[] fromRawByteArray (byte[] bytes)
+    {
+        char[] chars2 = new char[bytes.length/2];
+        for(int i=0;i<chars2.length;i++)
+            chars2[i] = (char) ((bytes[i*2] << 8) + (bytes[i*2+1] & 0xFF));
+        return chars2;
     }
 }

@@ -1,4 +1,8 @@
+package common;
+
 import crypto.Crypto;
+import dialogs.SearchBox;
+import dialogs.SingleInputDialog;
 import transform.*;
 
 import javax.swing.*;
@@ -18,7 +22,7 @@ public class PopupMenuHandler extends MouseInputAdapter
         menuOption("Cut", popup, e -> ta.cut());
         menuOption("Select all", popup, e -> ta.selectAll());
         popup.add(new JSeparator());
-        popup.add(settingSubMenu(ta, "Settings"));
+        popup.add(settingSubMenu(ta, "TextAreaSettings"));
         popup.add(imageSubMenu(ta, "Image"));
         popup.add(textSubMenu(ta, "Text Manipulation"));
         popup.add(codingSubMenu(ta, "Coding"));

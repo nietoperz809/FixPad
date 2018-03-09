@@ -1,9 +1,15 @@
+package settings;
+
+import common.MyTextArea;
+import common.ObjectReader;
+import common.ObjectWriter;
+
 import java.awt.*;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Settings implements Serializable
+public class TextAreaSettings implements Serializable
 {
     private Font font;
     private Color caretcol;
@@ -13,7 +19,7 @@ public class Settings implements Serializable
     private boolean linewrap;
     private String tabTitle;
 
-    private final static String fname
+    private transient final static String fname
             = System.getProperty("user.home") + File.separator + "FPsettings";
 
     static public void save (ArrayList<MyTextArea> list)
@@ -21,7 +27,7 @@ public class Settings implements Serializable
         ObjectWriter ow = new ObjectWriter(fname);
         for (MyTextArea jt : list)
         {
-            Settings st = new Settings();
+            TextAreaSettings st = new TextAreaSettings();
             st.font = jt.getFont();
             st.caretcol = jt.getCaretColor();
             st.fgcol = jt.getForeground();
@@ -41,7 +47,7 @@ public class Settings implements Serializable
             ObjectReader or = new ObjectReader(fname);
             for (MyTextArea jt : list)
             {
-                Settings st = (Settings) or.getObject();
+                TextAreaSettings st = (TextAreaSettings) or.getObject();
                 jt.setFont(st.font);
                 jt.setCaretColor(st.caretcol);
                 jt.setForeground(st.fgcol);
@@ -50,8 +56,6 @@ public class Settings implements Serializable
                 jt.setLineWrap(st.linewrap);
                 jt.setWrapStyleWord(true);
                 jt.getTpane().setTitleAt(jt.getTabIndex(), st.tabTitle);
-
-                //jt.requestFocusInWindow();
             }
             or.close();
         }

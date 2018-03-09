@@ -1,6 +1,9 @@
-import javax.swing.*;
-import java.io.File;
-import java.io.IOException;
+package common;
+
+import settings.MainWindowSettings;
+import settings.TextAreaSettings;
+
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Paths;
@@ -24,7 +27,8 @@ public class FileManager implements Runnable
     public void start()
     {
         loadEditors();
-        Settings.load(list);
+        MainWindowSettings.load();
+        TextAreaSettings.load(list);
         scheduler.scheduleAtFixedRate(this, 0, 10, TimeUnit.SECONDS);
     }
 
@@ -32,14 +36,16 @@ public class FileManager implements Runnable
     {
         scheduler.shutdown();
         saveEditors();
-        Settings.save(list);
+        TextAreaSettings.save(list);
+        MainWindowSettings.save();
     }
 
     private String load (String fname)
     {
         try
         {
-            return new String(Files.readAllBytes(Paths.get(fname)));
+            byte[] bytes = Files.readAllBytes(Paths.get(fname));
+            return  new String(Tools.fromRawByteArray(bytes));
         }
         catch (IOException e)
         {
@@ -51,7 +57,7 @@ public class FileManager implements Runnable
     {
         try
         {
-            byte[] bytes = txt.getBytes();
+            byte[] bytes = Tools.toRawByteArray(txt);
             OpenOption[] op = {StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING};
             Files.write (Paths.get(fname), bytes, op);
             return true;

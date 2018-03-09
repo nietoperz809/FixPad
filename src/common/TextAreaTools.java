@@ -1,3 +1,5 @@
+package common;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
