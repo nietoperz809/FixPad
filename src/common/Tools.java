@@ -34,7 +34,6 @@ public class Tools
         return new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
     }
 
-
     static void saveImage (String name, BufferedImage img, boolean jpg) throws IOException
     {
         if (jpg)

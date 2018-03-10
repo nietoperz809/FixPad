@@ -21,11 +21,27 @@ public class FixPad
     private final FileManager fman = new FileManager();
     private JPanel panel1;
 
+    public FixPad()
     {
-        setupUI();
+        panel1 = new JPanel();
+        panel1.setLayout(new BorderLayout(0, 0));
+        mainTab = new JTabbedPane();
+//        mainTab.addChangeListener(e ->
+//        {
+//            JTabbedPane tp = (JTabbedPane) e.getSource();
+//            int idx = tp.getSelectedIndex();
+//            //System.out.println(tp.getSelectedIndex());
+//            tp.setBackgroundAt(idx, Color.ORANGE);
+//            Component cc = tp.getComponentAt(idx);
+//            cc.invalidate();
+//            cc.repaint();
+//        });
+        panel1.add(mainTab, BorderLayout.CENTER);
+        setupTabs();
     }
 
     public static JFrame mainFrame;
+    public static JTabbedPane mainTab;
 
     public static void main (String[] args)
     {
@@ -88,22 +104,17 @@ public class FixPad
         });
     }
 
-    private void setupUI ()
+    private void setupTabs ()
     {
-        panel1 = new JPanel();
-        panel1.setLayout(new BorderLayout(0, 0));
-        JTabbedPane tabbedPane1 = new JTabbedPane();
-        panel1.add(tabbedPane1, BorderLayout.CENTER);
-
         for (int index = 0; index < 21; index++)
         {
             final JPanel panel2 = new JPanel();
             panel2.setLayout(new CardLayout(0, 0));
-            tabbedPane1.addTab("E:" + index, panel2);
+            mainTab.addTab("E:" + index, panel2);
             final JScrollPane scrollPane1 = new JScrollPane();
             panel2.add(scrollPane1, "Card1");
             MyTextArea jt = new MyTextArea();
-            jt.setTabData(tabbedPane1, index);
+            jt.setTabData(mainTab, index);
             enableDrops(jt);
             scrollPane1.setViewportView(jt);
             list.add(jt);
@@ -121,7 +132,6 @@ public class FixPad
             jt.setCaretColor(Color.ORANGE);
             jt.addMouseListener(new PopupMenuHandler(jt));
         }
-        //tabbedPane1.setTitleAt(0,"fuck");
     }
 }
 

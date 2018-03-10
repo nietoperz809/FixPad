@@ -6,6 +6,10 @@ import java.awt.print.PageFormat;
 import java.awt.print.Paper;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 public class TextAreaTools
 {
@@ -217,18 +221,16 @@ public class TextAreaTools
      * @param filePath Path and file name of the new image
      * @return false if smth. gone wrong
      */
-    public static boolean saveAsImage (MyTextArea ta, String filePath)
+    public static void saveAsImage (MyTextArea ta, String filePath)
     {
         try
         {
             BufferedImage bimage = toImage(ta);
             Tools.saveImage(filePath, bimage, false);
-            return true;
         }
         catch (Exception e)
         {
             System.out.println(e);
-            return false;
         }
     }
 
@@ -258,5 +260,19 @@ public class TextAreaTools
         form.setPaper(pap);
         pr.print(bGr, form, 0);
         return bimage;
+    }
+
+    public static void saveAsText (MyTextArea ta, String fname, String enc)
+    {
+        try
+        {
+            Files.write (Paths.get(fname),
+                    ta.getText().getBytes(enc), //"US-ASCII"),
+                    new StandardOpenOption[]{StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING});
+        }
+        catch (IOException e)
+        {
+            System.out.println(e);
+        }
     }
 }

@@ -23,7 +23,8 @@ public class PopupMenuHandler extends MouseInputAdapter
         menuOption("Select all", popup, e -> ta.selectAll());
         popup.add(new JSeparator());
         popup.add(settingSubMenu(ta, "TextAreaSettings"));
-        popup.add(imageSubMenu(ta, "Image"));
+        popup.add(imageSubMenu(ta, "Output Image"));
+        popup.add(textOutputSubMenu(ta, "Output Text"));
         popup.add(textSubMenu(ta, "Text Manipulation"));
         popup.add(codingSubMenu(ta, "Coding"));
         popup.add(cryptoSubMenu(ta, "Crypto"));
@@ -98,6 +99,28 @@ public class PopupMenuHandler extends MouseInputAdapter
             TextAreaTools.saveImageToClipboard(ta);
         });
 
+        return men;
+    }
+
+    private void saveTextFunc (MyTextArea ta, String encoding)
+    {
+        String defFile = ta.getTpane().getTitleAt(ta.getTabIndex());
+        String fname = new SingleInputDialog().start("Path and name of File", "c:\\"+defFile+".txt");
+        if (!fname.isEmpty())
+        {
+            TextAreaTools.saveAsText(ta, fname, encoding);
+        }
+    }
+
+    private JMenu textOutputSubMenu (MyTextArea ta, String title)
+    {
+        JMenu men = new JMenu(title);
+        menuOption("Save as ASCII", men, e -> saveTextFunc(ta,"US-ASCII"));
+        menuOption("Save as UTF8", men, e ->  saveTextFunc(ta,"UTF-8"));
+        menuOption("Save as ISO-8859-1", men, e ->  saveTextFunc(ta,"ISO-8859-1"));
+        menuOption("Save as UTF-16BE", men, e ->  saveTextFunc(ta,"UTF-16BE"));
+        menuOption("Save as UTF-16LE", men, e ->  saveTextFunc(ta,"UTF-16LE"));
+        menuOption("Save as UTF-16", men, e ->  saveTextFunc(ta,"UTF-16"));
         return men;
     }
 

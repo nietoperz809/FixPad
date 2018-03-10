@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import static common.FixPad.mainFrame;
+import static common.FixPad.mainTab;
 
 public class MainWindowSettings implements Serializable
 {
@@ -22,6 +23,7 @@ public class MainWindowSettings implements Serializable
         mw.y = mainFrame.getY();
         mw.width = mainFrame.getWidth();
         mw.height = mainFrame.getHeight();
+        mw.activeTab = mainTab.getSelectedIndex();
         ObjectWriter ow = new ObjectWriter(fname);
         ow.putObject(mw);
         ow.close();
@@ -35,6 +37,7 @@ public class MainWindowSettings implements Serializable
             MainWindowSettings mws = (MainWindowSettings) or.getObject();
             mainFrame.setLocation(mws.x, mws.y);
             mainFrame.setSize(mws.width, mws.height);
+            mainTab.setSelectedIndex(mws.activeTab);
         }
         catch (IOException e)
         {
