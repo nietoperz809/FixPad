@@ -10,6 +10,7 @@ import javax.swing.event.MouseInputAdapter;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.io.File;
 
 public class PopupMenuHandler extends MouseInputAdapter
 {
@@ -105,7 +106,9 @@ public class PopupMenuHandler extends MouseInputAdapter
     private void saveTextFunc (MyTextArea ta, String encoding)
     {
         String defFile = ta.getTpane().getTitleAt(ta.getTabIndex());
-        String fname = new SingleInputDialog().start("Path and name of File", "c:\\"+defFile+".txt");
+        String fname = new SingleInputDialog().start(
+                "Path and name of File",
+                "c:" + File.separator + defFile + "-" + encoding + ".txt");
         if (!fname.isEmpty())
         {
             TextAreaTools.saveAsText(ta, fname, encoding);
@@ -274,6 +277,16 @@ public class PopupMenuHandler extends MouseInputAdapter
             ta.push();
             String st = new GrayCode().retransform(ta.getText());
             ta.setText(st);
+        });
+        menuOption("toHexBytes", men, e -> {
+            ta.push();
+            String st = new HexBytes().transform(ta.getText());
+            ta.setFastText(st);
+        });
+        menuOption("fromHexBytes", men, e -> {
+            ta.push();
+            String st = new HexBytes().retransform(ta.getText());
+            ta.setFastText(st);
         });
 
         return men;

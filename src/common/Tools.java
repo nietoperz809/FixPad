@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class Tools
 {
@@ -112,4 +113,26 @@ public class Tools
             chars2[i] = (char) ((bytes[i*2] << 8) + (bytes[i*2+1] & 0xFF));
         return chars2;
     }
+
+    public static Image loadImageFromRessource (String name)
+    {
+        InputStream is = Thread.currentThread()
+                .getContextClassLoader()
+                .getResourceAsStream(name);
+        if (is == null)
+        {
+            System.out.println("Wrong resource name/path?");
+            return null;
+        }
+        try
+        {
+            return ImageIO.read(is);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

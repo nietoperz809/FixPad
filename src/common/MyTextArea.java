@@ -1,28 +1,45 @@
 package common;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.PlainDocument;
 import java.util.Stack;
 
 public class MyTextArea extends JTextArea
 {
-    private Stack<String> undoStack = new Stack<>();
+    private Stack<Document> undoStack = new Stack<>();
     private JTabbedPane tpane;
     private int tabIndex;
 
     public void push()
     {
-        undoStack.push(getText());
+        undoStack.push(getDocument());
     }
 
     public void pop()
     {
         try
         {
-            setText(undoStack.pop());
+            setDocument(undoStack.pop());
         }
         catch (Exception e)
         {
             System.out.println(e);
+        }
+    }
+
+    public void setFastText(String s)
+    {
+        PlainDocument doc = new PlainDocument();
+        try
+        {
+            doc.insertString(0, s, null);
+            this.setDocument(doc);
+        }
+        catch (BadLocationException e1)
+        {
+            System.out.println(e1);
         }
     }
 

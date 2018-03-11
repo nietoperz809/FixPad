@@ -106,6 +106,7 @@ public class FixPad
 
     private void setupTabs ()
     {
+        Cursor cur = new Cursor(Cursor.HAND_CURSOR);
         for (int index = 0; index < 21; index++)
         {
             final JPanel panel2 = new JPanel();
@@ -114,6 +115,7 @@ public class FixPad
             final JScrollPane scrollPane1 = new JScrollPane();
             panel2.add(scrollPane1, "Card1");
             MyTextArea jt = new MyTextArea();
+            jt.setCursor (cur);
             jt.setTabData(mainTab, index);
             enableDrops(jt);
             scrollPane1.setViewportView(jt);

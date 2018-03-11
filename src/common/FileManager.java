@@ -3,7 +3,8 @@ package common;
 import settings.MainWindowSettings;
 import settings.TextAreaSettings;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Paths;
@@ -46,6 +47,7 @@ public class FileManager implements Runnable
         {
             byte[] bytes = Files.readAllBytes(Paths.get(fname));
             return  new String(Tools.fromRawByteArray(bytes));
+            //return new String(bytes,"UTF-8");
         }
         catch (IOException e)
         {
@@ -58,6 +60,7 @@ public class FileManager implements Runnable
         try
         {
             byte[] bytes = Tools.toRawByteArray(txt);
+            //byte[] bytes = txt.getBytes("UTF-8");
             OpenOption[] op = {StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING};
             Files.write (Paths.get(fname), bytes, op);
             return true;
