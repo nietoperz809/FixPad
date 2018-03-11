@@ -24,8 +24,17 @@ public class MainWindowSettings implements Serializable
         mw.width = mainFrame.getWidth();
         mw.height = mainFrame.getHeight();
         mw.activeTab = mainTab.getSelectedIndex();
-        ObjectWriter ow = new ObjectWriter(fname);
-        ow.putObject(mw);
+        ObjectWriter ow = null;
+        try
+        {
+            ow = new ObjectWriter(fname);
+            ow.putObject(mw);
+        }
+        catch (IOException e)
+        {
+            System.out.println("in mainwindow settings save:");
+            System.out.println(e);
+        }
         ow.close();
     }
 
@@ -39,7 +48,7 @@ public class MainWindowSettings implements Serializable
             mainFrame.setSize(mws.width, mws.height);
             mainTab.setSelectedIndex(mws.activeTab);
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             mainFrame.setSize(1000, 600);
             mainFrame.setLocationRelativeTo(null);

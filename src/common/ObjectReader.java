@@ -23,17 +23,9 @@ public class ObjectReader
      * Get one Object
      * @return the object or null
      */
-    public Object getObject()
+    public Object getObject() throws IOException, ClassNotFoundException
     {
-        try
-        {
-            return obj_in.readObject();
-        }
-        catch (Exception unused)
-        {
-            System.out.println("no more objects");
-            return null;
-        }
+        return obj_in.readObject();
     }
 
     /**
@@ -49,6 +41,7 @@ public class ObjectReader
         }
         catch (IOException e)
         {
+            System.out.println("in Objectreader close");
             System.out.println(e);
         }
     }

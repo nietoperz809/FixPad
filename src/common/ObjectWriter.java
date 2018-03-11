@@ -13,33 +13,19 @@ public class ObjectWriter
      * Open Obj writer
      * @param fname file where objects dwell
      */
-    public ObjectWriter (String fname)
+    public ObjectWriter (String fname) throws IOException
     {
-        try
-        {
-            f_out = new FileOutputStream(fname);
-            obj_out = new ObjectOutputStream(f_out);
-        }
-        catch (Exception e)
-        {
-            System.out.println(e);;
-        }
+        f_out = new FileOutputStream(fname);
+        obj_out = new ObjectOutputStream(f_out);
     }
 
     /**
      * Write one object
      * @param o The object
      */
-    public void putObject (Object o)
+    public void putObject (Object o) throws IOException
     {
-        try
-        {
-            obj_out.writeObject(o);
-        }
-        catch (IOException e)
-        {
-            System.out.println(e);
-        }
+        obj_out.writeObject(o);
     }
 
     /**
@@ -55,6 +41,7 @@ public class ObjectWriter
         }
         catch (IOException e)
         {
+            System.out.println("in objectwriter close:");
             System.out.println(e);
         }
     }

@@ -6,6 +6,7 @@ import common.ObjectWriter;
 
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -24,20 +25,28 @@ public class TextAreaSettings implements Serializable
 
     static public void save (ArrayList<MyTextArea> list)
     {
-        ObjectWriter ow = new ObjectWriter(fname);
-        for (MyTextArea jt : list)
+        try
         {
-            TextAreaSettings st = new TextAreaSettings();
-            st.font = jt.getFont();
-            st.caretcol = jt.getCaretColor();
-            st.fgcol = jt.getForeground();
-            st.bkcol = jt.getBackground();
-            st.carpos = jt.getCaretPosition();
-            st.linewrap = jt.getLineWrap();
-            st.tabTitle = jt.getTpane().getTitleAt(jt.getTabIndex());
-            ow.putObject(st);
+            ObjectWriter ow = new ObjectWriter(fname);
+            for (MyTextArea jt : list)
+            {
+                TextAreaSettings st = new TextAreaSettings();
+                st.font = jt.getFont();
+                st.caretcol = jt.getCaretColor();
+                st.fgcol = jt.getForeground();
+                st.bkcol = jt.getBackground();
+                st.carpos = jt.getCaretPosition();
+                st.linewrap = jt.getLineWrap();
+                st.tabTitle = jt.getTpane().getTitleAt(jt.getTabIndex());
+                ow.putObject(st);
+            }
+            ow.close();
         }
-        ow.close();
+        catch (IOException e)
+        {
+            System.out.println("in textarea settings save:");
+            System.out.println(e);
+        }
     }
 
     static public void load (ArrayList<MyTextArea> list)
