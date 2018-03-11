@@ -278,6 +278,7 @@ public class PopupMenuHandler extends MouseInputAdapter
             String st = new GrayCode().retransform(ta.getText());
             ta.setText(st);
         });
+        men.add(new JSeparator());
         menuOption("toHexBytes", men, e -> {
             ta.push();
             String st = new HexBytes().transform(ta.getText());
@@ -299,18 +300,18 @@ public class PopupMenuHandler extends MouseInputAdapter
         menuOption("HagelinEncrypt", men, e -> {
             ta.push();
             String st = new HagelinCrypt().transform(ta.getText());
-            ta.setText(st);
+            ta.setFastText(st);
         });
         men.add(new JSeparator());
         menuOption("Pitti1-Encrypt", men, e -> {
             ta.push();
             String st = new Pitti1Crypt().transform(ta.getText());
-            ta.setText(st);
+            ta.setFastText(st);
         });
         menuOption("Pitti1-Decrypt", men, e -> {
             ta.push();
             String st = new Pitti1Crypt().retransform(ta.getText());
-            ta.setText(st);
+            ta.setFastText(st);
         });
         men.add(new JSeparator());
         menuOption("Peter1Crypt", men, e -> {
@@ -340,7 +341,7 @@ public class PopupMenuHandler extends MouseInputAdapter
                 {
                     byte[] pwh = Crypto.passwordHash(pass.getBytes("UTF-8"));
                     String s = Crypto.cryptAes256(true, pwh, ta.getText());
-                    ta.setText(s);
+                    ta.setFastText(s);
                 }
                 catch (Exception e1)
                 {
@@ -357,7 +358,7 @@ public class PopupMenuHandler extends MouseInputAdapter
                 {
                     byte[] pwh = Crypto.passwordHash(pass.getBytes("UTF-8"));
                     String s = Crypto.cryptAes256(false, pwh, ta.getText());
-                    ta.setText(s);
+                    ta.setFastText(s);
                 }
                 catch (Exception e1)
                 {

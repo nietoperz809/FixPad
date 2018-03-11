@@ -3,12 +3,10 @@ package common;
 import settings.MainWindowSettings;
 import settings.TextAreaSettings;
 
+import javax.swing.text.Document;
+import javax.swing.text.PlainDocument;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.OpenOption;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -41,13 +39,12 @@ public class FileManager implements Runnable
         MainWindowSettings.save();
     }
 
-    private String load (String fname)
+    private PlainDocument load (String fname)
     {
         try
         {
-            byte[] bytes = Files.readAllBytes(Paths.get(fname));
-            return  new String(Tools.fromRawByteArray(bytes));
-            //return new String(bytes,"UTF-8");
+            ObjectReader re = new ObjectReader(fname);
+            return (PlainDocument) re.getObject();
         }
         catch (IOException e)
         {
@@ -55,21 +52,11 @@ public class FileManager implements Runnable
         }
     }
 
-    private boolean save (String txt, String fname)
+    private void save (PlainDocument doc, String fname)
     {
-        try
-        {
-            byte[] bytes = Tools.toRawByteArray(txt);
-            //byte[] bytes = txt.getBytes("UTF-8");
-            OpenOption[] op = {StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING};
-            Files.write (Paths.get(fname), bytes, op);
-            return true;
-        }
-        catch (IOException e)
-        {
-            System.out.println("save fail");
-            return false;
-        }
+        ObjectWriter wr = new ObjectWriter(fname);
+        wr.putObject(doc);
+        wr.close();
     }
 
     private void loadEditors()
@@ -78,8 +65,9 @@ public class FileManager implements Runnable
         {
             MyTextArea jp = list.get(n);
             String fname = createFname(n);
-            String txt = load (fname);
-            jp.setText(txt);
+            Document doc = load (fname);
+            if (doc != null)
+                jp.setDocument(doc);
         }
     }
 
@@ -89,14 +77,11 @@ public class FileManager implements Runnable
         {
             MyTextArea jp = list.get(n);
             String fname = createFname(n);
-            String txt = jp.getText();
-            String old = load (fname);
-            if (old == null || !txt.equals(old))
+            PlainDocument doc = (PlainDocument) jp.getDocument();
+            Document old = load (fname);
+            if (old == null || !doc.equals(old))
             {
-                if (!save(txt, fname))
-                {
-                    System.out.println("save failed: "+fname);
-                }
+                save(doc, fname);
             }
         }
     }
