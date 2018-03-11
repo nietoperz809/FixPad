@@ -25,7 +25,15 @@ public class FileManager implements Runnable
 
     public void start()
     {
-        loadEditors();
+        try
+        {
+            loadEditors();
+        }
+        catch (Exception e)
+        {
+            System.out.println("in fileman start:");
+            System.out.println(e);
+        }
         MainWindowSettings.load();
         TextAreaSettings.load(list);
         scheduler.scheduleAtFixedRate(this, 0, 10, TimeUnit.SECONDS);
@@ -34,45 +42,56 @@ public class FileManager implements Runnable
     public void stop()
     {
         scheduler.shutdown();
-        saveEditors();
+        try
+        {
+            saveEditors();
+        }
+        catch (Exception e)
+        {
+            System.out.println("In fileman stop:");
+            System.out.println(e);
+        }
         TextAreaSettings.save(list);
         MainWindowSettings.save();
     }
 
-    private PlainDocument load (String fname)
+    private PlainDocument load (String fname) throws IOException, ClassNotFoundException
     {
-        try
-        {
-            ObjectReader re = new ObjectReader(fname);
-            return (PlainDocument) re.getObject();
-        }
-        catch (IOException e)
-        {
-            return null;
-        }
+        ObjectReader re = new ObjectReader(fname);
+        PlainDocument pd = (PlainDocument) re.getObject();
+        re.close();
+        return pd;
     }
 
     private void save (PlainDocument doc, String fname)
     {
-        ObjectWriter wr = new ObjectWriter(fname);
-        wr.putObject(doc);
-        wr.close();
+        try
+        {
+            ObjectWriter wr = new ObjectWriter(fname);
+            wr.putObject(doc);
+            wr.close();
+        }
+        catch (IOException e)
+        {
+            System.out.println("in fileman save");
+            System.out.println(e);
+        }
     }
 
-    private void loadEditors()
+    private void loadEditors() throws IOException, ClassNotFoundException
     {
         for (int n=0; n<list.size(); n++)
         {
             MyTextArea jp = list.get(n);
             String fname = createFname(n);
             Document doc = load (fname);
-            if (doc != null)
-                jp.setDocument(doc);
+            jp.setDocument(doc);
         }
     }
 
-    private void saveEditors()
+    private void saveEditors() throws IOException, ClassNotFoundException
     {
+        System.out.println("save editors");
         for (int n=0; n<list.size(); n++)
         {
             MyTextArea jp = list.get(n);
@@ -93,6 +112,14 @@ public class FileManager implements Runnable
 
     public void run()
     {
-        saveEditors();
+        try
+        {
+            saveEditors();
+        }
+        catch (Exception e)
+        {
+            System.out.println("in timer proc:");
+            System.out.println(e);
+        }
     }
 }

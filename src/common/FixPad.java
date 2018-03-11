@@ -90,7 +90,10 @@ public class FixPad
                             @SuppressWarnings("unchecked")
                             java.util.List<File> files = (List<File>) transferable.getTransferData(flavor);
                             File f = files.get(0);
-                            String content = new String(Files.readAllBytes(f.toPath()), "UTF-8");// Charset.defaultCharset().name());
+                            String content = new String (
+                                    Files.readAllBytes (
+                                    f.toPath()),
+                                    "UTF-8");
                             jt.setText(content);
                             return; // only one file
                         }
