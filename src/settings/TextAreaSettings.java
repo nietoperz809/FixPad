@@ -18,6 +18,7 @@ public class TextAreaSettings implements Serializable
     private Color bkcol;
     private int carpos;
     private boolean linewrap;
+    private boolean editable;
     private String tabTitle;
 
     private transient final static String fname
@@ -37,6 +38,7 @@ public class TextAreaSettings implements Serializable
                 st.bkcol = jt.getBackground();
                 st.carpos = jt.getCaretPosition();
                 st.linewrap = jt.getLineWrap();
+                st.editable = jt.isEditable();
                 st.tabTitle = jt.getTpane().getTitleAt(jt.getTabIndex());
                 ow.putObject(st);
             }
@@ -64,6 +66,7 @@ public class TextAreaSettings implements Serializable
                 jt.setCaretPosition(st.carpos);
                 jt.setLineWrap(st.linewrap);
                 jt.setWrapStyleWord(true);
+                jt.setEditable(st.editable);
                 jt.getTpane().setTitleAt(jt.getTabIndex(), st.tabTitle);
             }
             or.close();

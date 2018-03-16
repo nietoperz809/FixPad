@@ -55,6 +55,7 @@ public class PopupMenuHandler extends MouseInputAdapter
             ta.setLineWrap(!ta.getLineWrap());
             ta.setWrapStyleWord(true);
         });
+        menuOption("Toggle Write Lock", men, e -> ta.setEditable(!ta.isEditable()));
         menuOption("Font ...", men, e -> {
             final FontChooser2 fc = new FontChooser2(null);
             fc.adjustDisplay(ta.getFont());
