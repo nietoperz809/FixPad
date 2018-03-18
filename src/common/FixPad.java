@@ -12,14 +12,31 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.nio.file.Files;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class FixPad
 {
+    private final static DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+
     private final ArrayList<MyTextArea> list = new ArrayList<>();
     private final FileManager fman = new FileManager();
     private JPanel panel1;
+
+    public static JFrame mainFrame;
+    public static JTabbedPane mainTab;
+    private static JLabel statusBar;
+
+    public static void setStatusBar (String txt)
+    {
+        Calendar cal = Calendar.getInstance();
+        String time = dateFormat.format(cal.getTime())+ ": ";
+
+        SwingUtilities.invokeLater(() -> statusBar.setText(time+txt));
+    }
 
     public FixPad()
     {
@@ -37,11 +54,13 @@ public class FixPad
 //            cc.repaint();
 //        });
         panel1.add(mainTab, BorderLayout.CENTER);
+        statusBar = new JLabel("...");
+        statusBar.setOpaque(true);
+        statusBar.setBackground(Color.BLACK);
+        statusBar.setForeground(Color.GREEN);
+        panel1.add (statusBar, BorderLayout.SOUTH);
         setupTabs();
     }
-
-    public static JFrame mainFrame;
-    public static JTabbedPane mainTab;
 
     public static void main (String[] args)
     {

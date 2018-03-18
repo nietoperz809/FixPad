@@ -18,6 +18,7 @@ public class FileManager implements Runnable
     private final String homePath = System.getProperty("user.home");
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
+
     public void put (ArrayList<MyTextArea> otherList)
     {
         list = otherList;
@@ -78,30 +79,32 @@ public class FileManager implements Runnable
         }
     }
 
-    private void loadEditors() throws IOException, ClassNotFoundException
+    private void loadEditors()
     {
         for (int n=0; n<list.size(); n++)
         {
             MyTextArea jp = list.get(n);
             String fname = createFname(n);
-            Document doc = load (fname);
-            jp.setDocument(doc);
+            try
+            {
+                Document doc = load (fname);
+                jp.setDocument(doc);
+            }
+            catch (Exception e)
+            {
+                System.out.println("failed to load doc: "+n);
+            }
         }
     }
 
-    private void saveEditors() throws IOException, ClassNotFoundException
+    private void saveEditors()
     {
-        System.out.println("save editors");
         for (int n=0; n<list.size(); n++)
         {
             MyTextArea jp = list.get(n);
             String fname = createFname(n);
             PlainDocument doc = (PlainDocument) jp.getDocument();
-            Document old = load (fname);
-            if (old == null || !doc.equals(old))
-            {
-                save(doc, fname);
-            }
+            save(doc, fname);
         }
     }
 
@@ -121,5 +124,9 @@ public class FileManager implements Runnable
             System.out.println("in timer proc:");
             System.out.println(e);
         }
+        TextAreaSettings.save(list);
+        MainWindowSettings.save();
+
+        FixPad.setStatusBar("Saved");
     }
 }
