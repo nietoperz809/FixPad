@@ -1,5 +1,6 @@
 package settings;
 
+import common.FixPad;
 import common.MyTextArea;
 import common.ObjectReader;
 import common.ObjectWriter;
@@ -16,6 +17,7 @@ public class TextAreaSettings implements Serializable
     private Color caretcol;
     private Color fgcol;
     private Color bkcol;
+    private Color tabColor;
     private int carpos;
     private boolean linewrap;
     private boolean editable;
@@ -26,28 +28,30 @@ public class TextAreaSettings implements Serializable
 
     static public void save (ArrayList<MyTextArea> list)
     {
+        String tabTitle = "??";
         try
         {
             ObjectWriter ow = new ObjectWriter(fname);
             for (MyTextArea jt : list)
             {
+                tabTitle = jt.getTpane().getTitleAt(jt.getTabIndex());
                 TextAreaSettings st = new TextAreaSettings();
                 st.font = jt.getFont();
                 st.caretcol = jt.getCaretColor();
+                st.tabColor = jt.getTpane().getBackgroundAt(jt.getTabIndex());
                 st.fgcol = jt.getForeground();
                 st.bkcol = jt.getBackground();
                 st.carpos = jt.getCaretPosition();
                 st.linewrap = jt.getLineWrap();
                 st.editable = jt.isEditable();
-                st.tabTitle = jt.getTpane().getTitleAt(jt.getTabIndex());
+                st.tabTitle = tabTitle;
                 ow.putObject(st);
             }
             ow.close();
         }
         catch (IOException e)
         {
-            System.out.println("in textarea settings save:");
-            System.out.println(e);
+            FixPad.setStatusBar("TA settings / " + tabTitle + " / "+e);
         }
     }
 
@@ -68,6 +72,8 @@ public class TextAreaSettings implements Serializable
                 jt.setWrapStyleWord(true);
                 jt.setEditable(st.editable);
                 jt.getTpane().setTitleAt(jt.getTabIndex(), st.tabTitle);
+                jt.getTpane().setBackgroundAt(jt.getTabIndex(), st.tabColor);
+
             }
             or.close();
         }

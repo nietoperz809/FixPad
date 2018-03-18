@@ -1,5 +1,6 @@
 package settings;
 
+import common.FixPad;
 import common.ObjectReader;
 import common.ObjectWriter;
 
@@ -32,8 +33,7 @@ public class MainWindowSettings implements Serializable
         }
         catch (IOException e)
         {
-            System.out.println("in mainwindow settings save:");
-            System.out.println(e);
+            FixPad.setStatusBar("MW save / "+e);
         }
     }
 

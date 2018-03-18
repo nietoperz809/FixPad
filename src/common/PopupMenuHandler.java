@@ -51,6 +51,13 @@ public class PopupMenuHandler extends MouseInputAdapter
                 ta.getTpane().setTitleAt(ta.getTabIndex(), name);
             }
         });
+        menuOption("Change tab color ...", men, e -> {
+            JTabbedPane tp = ta.getTpane();
+            int idx = ta.getTabIndex();
+            Color col = JColorChooser.showDialog(null,
+                    "Tab Color", tp.getBackground());
+            tp.setBackgroundAt(idx, col);
+        });
         menuOption("Toggle Word Wrap", men, e -> {
             ta.setLineWrap(!ta.getLineWrap());
             ta.setWrapStyleWord(true);

@@ -115,18 +115,16 @@ public class FileManager implements Runnable
 
     public void run()
     {
+        FixPad.setStatusBar("Autosave");
         try
         {
             saveEditors();
         }
         catch (Exception e)
         {
-            System.out.println("in timer proc:");
-            System.out.println(e);
+            FixPad.setStatusBar("Timerproc / "+e);
         }
         TextAreaSettings.save(list);
         MainWindowSettings.save();
-
-        FixPad.setStatusBar("Saved");
     }
 }

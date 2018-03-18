@@ -12,11 +12,17 @@ public class MyTextArea extends JTextArea
     private JTabbedPane tpane;
     private int tabIndex;
 
+    /**
+     * Push current Doc on Undo Stack
+     */
     public void push()
     {
         undoStack.push(getDocument());
     }
 
+    /**
+     * Pop current Doc from Undo Stack
+     */
     public void pop()
     {
         try
@@ -29,6 +35,10 @@ public class MyTextArea extends JTextArea
         }
     }
 
+    /**
+     * Set new Context by repacing tne Doc Object
+     * @param s new content as string
+     */
     public void setFastText(String s)
     {
         PlainDocument doc = new PlainDocument();
@@ -43,29 +53,50 @@ public class MyTextArea extends JTextArea
         }
     }
 
+    /**
+     * Get Tab pane
+     * @return
+     */
     public JTabbedPane getTpane ()
     {
         return tpane;
     }
 
-    public void setTpane (JTabbedPane tpane)
-    {
-        this.tpane = tpane;
-    }
+//    /**
+//     * Set tab pane where this textfield belongs to
+//     * @param tpane The tab pane
+//     */
+//    public void setTpane (JTabbedPane tpane)
+//    {
+//        this.tpane = tpane;
+//    }
 
+    /**
+     * get index of tab pane where this textfield resides
+     * @return the index
+     */
     public int getTabIndex ()
     {
         return tabIndex;
     }
 
-    public void setTabIndex (int tabIndex)
-    {
-        this.tabIndex = tabIndex;
-    }
+//    /**
+//     * Set index in tab Pane where this textfield belongs to
+//     * @param tabIndex
+//     */
+//    public void setTabIndex (int tabIndex)
+//    {
+//        this.tabIndex = tabIndex;
+//    }
 
+    /**
+     * Set tab pane and tab index of this text field
+     * @param tp Pane
+     * @param idx index
+     */
     public void setTabData (JTabbedPane tp, int idx)
     {
-        setTpane(tp);
-        setTabIndex(idx);
+        this.tpane = tp;
+        this.tabIndex = idx;
     }
 }
