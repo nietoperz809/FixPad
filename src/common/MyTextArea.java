@@ -53,9 +53,14 @@ public class MyTextArea extends JTextArea
         }
     }
 
+    public String getTabTitle()
+    {
+        return getTpane().getTitleAt(getTabIndex());
+    }
+
     /**
      * Get Tab pane
-     * @return
+     * @return the pane
      */
     public JTabbedPane getTpane ()
     {

@@ -37,7 +37,7 @@ public class FileManager implements Runnable
         }
         MainWindowSettings.load();
         TextAreaSettings.load(list);
-        scheduler.scheduleAtFixedRate(this, 0, 10, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(this, 10, 30, TimeUnit.SECONDS);
     }
 
     public void stop()
@@ -45,7 +45,7 @@ public class FileManager implements Runnable
         scheduler.shutdown();
         try
         {
-            saveEditors();
+            saveEditors(false);
         }
         catch (Exception e)
         {
@@ -64,8 +64,24 @@ public class FileManager implements Runnable
         return pd;
     }
 
-    private void save (PlainDocument doc, String fname)
+    private boolean save (PlainDocument doc, String fname)
     {
+//        if (doc.getLength() == 0)
+//            return false;
+        try
+        {
+            PlainDocument pd2 = load (fname);
+            String t1 = pd2.getText (0, pd2.getLength());
+            String t2 = doc.getText (0, doc.getLength());
+            if (t1.equals(t2))
+            {
+                return false; // nothing to save
+            }
+        }
+        catch (Exception e)
+        {
+            // fall through
+        }
         try
         {
             ObjectWriter wr = new ObjectWriter(fname);
@@ -77,6 +93,7 @@ public class FileManager implements Runnable
             System.out.println("in fileman save");
             System.out.println(e);
         }
+        return true;
     }
 
     private void loadEditors()
@@ -94,17 +111,34 @@ public class FileManager implements Runnable
             {
                 System.out.println("failed to load doc: "+n);
             }
-        }
+            //System.out.println("load: "+n);
+        }                            
     }
 
-    private void saveEditors()
+    private void saveEditors (boolean wait)
     {
         for (int n=0; n<list.size(); n++)
         {
             MyTextArea jp = list.get(n);
             String fname = createFname(n);
+            String suffix = n+": "+jp.getTabTitle();
             PlainDocument doc = (PlainDocument) jp.getDocument();
-            save(doc, fname);
+            if (!save(doc, fname))
+                FixPad.setStatusBar("No need to save " + suffix);
+            else
+                FixPad.setStatusBar("Saved Tab " +suffix);
+            if (wait)
+            {
+                try
+                {
+                    Thread.sleep(1000);
+                }
+                catch (InterruptedException e)
+                {
+                    return;
+                    //FixPad.setStatusBar("Failed to save Tab "+n+" / "+e);
+                }
+            }
         }
     }
 
@@ -118,7 +152,7 @@ public class FileManager implements Runnable
         FixPad.setStatusBar("Autosave");
         try
         {
-            saveEditors();
+            saveEditors(true);
         }
         catch (Exception e)
         {

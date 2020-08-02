@@ -43,23 +43,12 @@ public class FixPad
         panel1 = new JPanel();
         panel1.setLayout(new BorderLayout(0, 0));
         mainTab = new JTabbedPane();
-//        mainTab.addChangeListener(e ->
-//        {
-//            JTabbedPane tp = (JTabbedPane) e.getSource();
-//            int idx = tp.getSelectedIndex();
-//            //System.out.println(tp.getSelectedIndex());
-//            tp.setBackgroundAt(idx, Color.ORANGE);
-//            Component cc = tp.getComponentAt(idx);
-//            cc.invalidate();
-//            cc.repaint();
-//        });
         panel1.add(mainTab, BorderLayout.CENTER);
         statusBar = new JLabel("...");
         statusBar.setOpaque(true);
         statusBar.setBackground(Color.BLACK);
         statusBar.setForeground(Color.GREEN);
         panel1.add (statusBar, BorderLayout.SOUTH);
-        setupTabs();
     }
 
     public static void main (String[] args)
@@ -69,6 +58,9 @@ public class FixPad
         {
             mainFrame = new JFrame("FixPad");
             FixPad pad = new FixPad();
+            pad.setupTabs();
+            mainFrame.setContentPane(pad.panel1);
+            mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             mainFrame.addWindowListener(new WindowAdapter()
             {
                 @Override
@@ -77,8 +69,7 @@ public class FixPad
                     pad.fman.stop();
                 }
             });
-            mainFrame.setContentPane(pad.panel1);
-            mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            mainFrame.setVisible(true);
             pad.startFman();
         });
     }
@@ -155,6 +146,7 @@ public class FixPad
             //mc.startFlashing();
             jt.setCaretColor(Color.ORANGE);
             jt.addMouseListener(new PopupMenuHandler(jt));
+            //System.out.println("tab: "+index);
         }
     }
 }

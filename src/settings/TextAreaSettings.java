@@ -34,7 +34,7 @@ public class TextAreaSettings implements Serializable
             ObjectWriter ow = new ObjectWriter(fname);
             for (MyTextArea jt : list)
             {
-                tabTitle = jt.getTpane().getTitleAt(jt.getTabIndex());
+                tabTitle = jt.getTabTitle();
                 TextAreaSettings st = new TextAreaSettings();
                 st.font = jt.getFont();
                 st.caretcol = jt.getCaretColor();

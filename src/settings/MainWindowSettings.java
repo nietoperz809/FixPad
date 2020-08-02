@@ -54,7 +54,6 @@ public class MainWindowSettings implements Serializable
             mainFrame.setLocationRelativeTo(null);
             System.out.println("Cannot load MWS");
         }
-        mainFrame.setVisible(true);
     }
 
 }

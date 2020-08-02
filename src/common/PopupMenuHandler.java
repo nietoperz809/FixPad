@@ -298,6 +298,18 @@ public class PopupMenuHandler extends MouseInputAdapter
             ta.setFastText(st);
         });
 
+        men.add(new JSeparator());
+        menuOption("toAsciiBytes", men, e -> {
+            ta.push();
+            String st = new AsciiBytes().transform(ta.getText());
+            ta.setFastText(st);
+        });
+        menuOption("fromAsciiBytes", men, e -> {
+            ta.push();
+            String st = new AsciiBytes().retransform(ta.getText());
+            ta.setFastText(st);
+        });
+
         return men;
     }
 
