@@ -2,13 +2,18 @@ package transform;
 
 public class Binary implements Transformation
 {
-    private final int mBase;
+    private final int mBitCount;
 
-    public Binary (int base)
+    public Binary (int bc)
     {
-        mBase = base;
+        mBitCount = bc;
     }
 
+    /**
+     * Makes bit string (00101...) from string
+     * @param in human readable input string
+     * @return bit pattern representing this
+     */
     public String strToBitString (String in)
     {
         StringBuilder sb = new StringBuilder();
@@ -22,16 +27,22 @@ public class Binary implements Transformation
         return sb.toString ();
     }
 
+    /**
+     * Converts bit pattern into human readable string
+     * @param in string containing 1's and 0's as well as whitespaces
+     * @return clear text string
+     * @throws Exception if bit pattern isn't multiple of bit count
+     */
     public String strFromBitString (String in) throws Exception
     {
-        in = in.replaceAll("\\s+", "");
-        if (in.length ()%mBase != 0)
-            throw new Exception ("Input string must be multiple of "+mBase);
+        in = in.replaceAll("\\s+", "");  // remove whitspaces
+        if (in.length ()% mBitCount != 0)
+            throw new Exception ("Input string must be multiple of "+ mBitCount);
         StringBuilder res = new StringBuilder();
         while (!in.isEmpty ())
         {
-            String part= in.substring (0, mBase);
-            in = in.substring (mBase);
+            String part= in.substring (0, mBitCount);
+            in = in.substring (mBitCount);
             res.append (fromBitString (part));
         }
         return res.toString ();
@@ -39,11 +50,11 @@ public class Binary implements Transformation
 
     private char fromBitString (String in) throws Exception
     {
-        if (in.length () != mBase)
-            throw new Exception ("Input string must be "+mBase+" chars");
+        if (in.length () != mBitCount)
+            throw new Exception ("Input string must be "+ mBitCount +" chars");
         char bit = 1;
         char result = 0;
-        for (int s=0; s<mBase; s++)
+        for (int s = 0; s< mBitCount; s++)
         {
             if (in.charAt (in.length ()-1)=='1')
                 result |= bit;
@@ -56,8 +67,8 @@ public class Binary implements Transformation
     private String strToBitString (char c)
     {
         StringBuilder sb = new StringBuilder ();
-        char bit = (char)(1<<(mBase-1)); //32768;
-        for (int s=0; s<mBase; s++)
+        char bit = (char)(1<<(mBitCount -1)); //32768;
+        for (int s = 0; s< mBitCount; s++)
         {
             sb.append ((c & bit) == bit ? '1' : '0');
             bit >>= 1;
