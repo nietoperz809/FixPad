@@ -299,7 +299,7 @@ public class PopupMenuHandler extends MouseInputAdapter
         });
 
         men.add(new JSeparator());
-        menuOption("toAsciiBytes", men, e -> {
+        menuOption("toAsciiBytes (LOSSY!)", men, e -> {
             ta.push();
             String st = new AsciiBytes().transform(ta.getText());
             ta.setFastText(st);
@@ -307,6 +307,28 @@ public class PopupMenuHandler extends MouseInputAdapter
         menuOption("fromAsciiBytes", men, e -> {
             ta.push();
             String st = new AsciiBytes().retransform(ta.getText());
+            ta.setFastText(st);
+        });
+
+        men.add(new JSeparator());
+        menuOption("toBinary16", men, e -> {
+            ta.push();
+            String st = new Binary(16).transform(ta.getText());
+            ta.setFastText(st);
+        });
+        menuOption("fromBinary16", men, e -> {
+            ta.push();
+            String st = new Binary(16).retransform(ta.getText());
+            ta.setFastText(st);
+        });
+        menuOption("toBinary8", men, e -> {
+            ta.push();
+            String st = new Binary(8).transform(ta.getText());
+            ta.setFastText(st);
+        });
+        menuOption("fromBinary8", men, e -> {
+            ta.push();
+            String st = new Binary(8).retransform(ta.getText());
             ta.setFastText(st);
         });
 
