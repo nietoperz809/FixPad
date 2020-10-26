@@ -1,10 +1,22 @@
 package transform;
 
+import java.util.ArrayList;
+
+import static common.Tools.fixedSplit;
+
 /**
  * Created by Administrator on 4/26/2016.
  */
 public class Pitti1Crypt implements Transformation
 {
+    static final char[] arr1 =
+            {
+                    'g', 'm', 'j', 's', 'o', 'r', 'v', 'e', 'w', 'f', 'i', 'a', 'p', 'c', 'q', 'u', 't', 'z', 'l', 'b', 'd', 'x', 'y', 'n', 'h', 'k'
+            };
+    static final char[] arr2 =
+            {
+                    'l', 't', 'n', 'u', 'h', 'j', 'a', 'y', 'k', 'c', 'z', 's', 'b', 'x', 'e', 'm', 'o', 'f', 'd', 'q', 'p', 'g', 'i', 'v', 'w', 'r'
+            };
     @Override
     public String transform (String in)
     {
@@ -19,17 +31,8 @@ public class Pitti1Crypt implements Transformation
 
     //////////////////////////////////////////////////////////////
     
-    private static String substituteWord(String in, boolean mode)
+    private static String substituteWord (String in, boolean mode)
     {
-        char arr1[] =
-                {
-                        'g', 'm', 'j', 's', 'o', 'r', 'v', 'e', 'w', 'f', 'i', 'a', 'p', 'c', 'q', 'u', 't', 'z', 'l', 'b', 'd', 'x', 'y', 'n', 'h', 'k'
-                };
-        char arr2[] =
-                {
-                        'l', 't', 'n', 'u', 'h', 'j', 'a', 'y', 'k', 'c', 'z', 's', 'b', 'x', 'e', 'm', 'o', 'f', 'd', 'q', 'p', 'g', 'i', 'v', 'w', 'r'
-                };
-
         char[] exchg = mode ? arr1 : arr2;
 
         //in = in.toLowerCase();
@@ -41,7 +44,7 @@ public class Pitti1Crypt implements Transformation
             for (int n=0; n<(s+1); n++)
             {
                 int idx = c1-'a';
-                if (idx >= 0)
+                if (idx >= 0 && idx <= exchg.length)
                     c1 = exchg[idx];
             }
             out.append(c1);
@@ -62,16 +65,30 @@ public class Pitti1Crypt implements Transformation
 
     public static String substituteText(String in, boolean mode)
     {
-        String out = "";
-        String[] splitted = in.split(" ");
+        StringBuilder out = new StringBuilder();
+        ArrayList<String> splitted = fixedSplit(in, 12);
 
-        for (int s = 0; s < splitted.length; s++)
+        for (int s = 0; s < splitted.size(); s++)
         {
-            out += substituteWord(splitted[s], mode, s + 1) + " ";
+            out.append (substituteWord(splitted.get(s), mode, s + 1));
         }
 
-        return out;
+        return out.toString();
     }
+
+
+//    public static String substituteText(String in, boolean mode)
+//    {
+//        StringBuilder out = new StringBuilder();
+//        String[] splitted = in.split(" ");
+//
+//        for (int s = 0; s < splitted.length; s++)
+//        {
+//            out.append(substituteWord(splitted[s], mode, s + 1)).append(" ");
+//        }
+//
+//        return out.toString();
+//    }
 
     public static void main(String... args)
     {

@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
+import java.awt.event.MouseListener;
 import java.util.Stack;
 
 public class MyTextArea extends JTextArea
@@ -11,13 +12,50 @@ public class MyTextArea extends JTextArea
     private Stack<Document> undoStack = new Stack<>();
     private JTabbedPane tpane;
     private int tabIndex;
+    private PopupMenuHandler menuHandler;
+
+    @Override
+    public synchronized void addMouseListener(MouseListener l)
+    {
+        if (l instanceof PopupMenuHandler)
+            menuHandler = (PopupMenuHandler)l;
+        super.addMouseListener(l);
+    }
+
+    int getUndoStackSize()
+    {
+        return undoStack.size();
+    }
+
+    void updateUndoMenu()
+    {
+        menuHandler.undoItem.setText("Undo ("+getUndoStackSize()+")");
+    }
 
     /**
      * Push current Doc on Undo Stack
      */
     public void push()
     {
-        undoStack.push(getDocument());
+        Document doc = getDocument();
+        if (doc == null || doc.getLength() == 0)
+            return;
+        try
+        {
+            String txt = doc.getText(0, doc.getLength());
+            doc = new PlainDocument();
+            doc.insertString(0, txt, null);
+        }
+        catch (BadLocationException e)
+        {
+            System.out.println(e);
+            return;
+        }
+        if (undoStack == null)
+            undoStack = new Stack<>();
+        undoStack.push(doc);
+        System.out.println("push");
+        updateUndoMenu();
     }
 
     /**
@@ -27,7 +65,9 @@ public class MyTextArea extends JTextArea
     {
         try
         {
-            setDocument(undoStack.pop());
+            Document doc = undoStack.pop();
+            updateUndoMenu();
+            super.setDocument(doc);
         }
         catch (Exception e)
         {
@@ -35,23 +75,48 @@ public class MyTextArea extends JTextArea
         }
     }
 
+    @Override
+    public void setDocument(Document doc)
+    {
+        push();
+        super.setDocument(doc);
+    }
+
+    @Override
+    public void append(String str)
+    {
+        push();
+        super.append(str);
+    }
+
+    @Override
+    public void setText(String str)
+    {
+        push();
+        super.setText(str);
+    }
+
     /**
-     * Set new Context by repacing tne Doc Object
+     * Set new Context by reparing tne Doc Object
      * @param s new content as string
      */
     public void setFastText(String s)
     {
+        //System.out.println("setfast "+s);
+        push();
         PlainDocument doc = new PlainDocument();
         try
         {
             doc.insertString(0, s, null);
-            this.setDocument(doc);
+            super.setDocument(doc);
         }
         catch (BadLocationException e1)
         {
             System.out.println(e1);
         }
     }
+
+
 
     public String getTabTitle()
     {
@@ -67,14 +132,6 @@ public class MyTextArea extends JTextArea
         return tpane;
     }
 
-//    /**
-//     * Set tab pane where this textfield belongs to
-//     * @param tpane The tab pane
-//     */
-//    public void setTpane (JTabbedPane tpane)
-//    {
-//        this.tpane = tpane;
-//    }
 
     /**
      * get index of tab pane where this textfield resides
@@ -84,15 +141,6 @@ public class MyTextArea extends JTextArea
     {
         return tabIndex;
     }
-
-//    /**
-//     * Set index in tab Pane where this textfield belongs to
-//     * @param tabIndex
-//     */
-//    public void setTabIndex (int tabIndex)
-//    {
-//        this.tabIndex = tabIndex;
-//    }
 
     /**
      * Set tab pane and tab index of this text field

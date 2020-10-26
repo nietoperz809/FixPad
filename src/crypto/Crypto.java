@@ -1,12 +1,22 @@
 package crypto;
 
 import common.Tools;
+import transform.HagelinCrypt;
+import transform.Pitti1Crypt;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class Crypto
 {
+    enum CryptMethod
+    {
+        AESEncoded,
+        Peter1Encoded,
+        HagelinEncoded,
+        PittyEncoded
+    }
+
     /**
      * Generates a (hopefully) secure hash value of 32 bytes from a given password
      *
@@ -103,8 +113,50 @@ public class Crypto
         return x;
     }
 
+    public static String cryptPitty (String in)
+    {
+        String header = CryptMethod.PittyEncoded.name();
+        boolean mode = true; // encrypt
+        if (in.startsWith(header))
+        {
+            in = in.substring(header.length());
+            mode = false;  // decrypt
+        }
+        String out;
+        if (mode)
+        {
+            out = new Pitti1Crypt().transform(in);
+            out = header+out;
+        }
+        else
+            out = new Pitti1Crypt().retransform(in);
+        return out;
+    }
+
+    public static String cryptHagelin (String in)
+    {
+        String header = CryptMethod.HagelinEncoded.name();
+        boolean mode = true; // encrypt
+        if (in.startsWith(header))
+        {
+            in = in.substring(header.length());
+            mode = false;  // decrypt
+        }
+        String out = new HagelinCrypt().crypt(in);
+        if (mode)
+            out = header+out;
+        return out;
+    }
+
     public static String cryptFilePeter1 (byte[] key, String in) throws Exception
     {
+        String header = CryptMethod.Peter1Encoded.name();
+        boolean mode = true; // encrypt
+        if (in.startsWith(header))
+        {
+            in = in.substring(header.length());
+            mode = false;  // decrypt
+        }
         byte[] buff;
         byte[] all = Tools.toRawByteArray(in);
         int size = all.length;
@@ -129,19 +181,27 @@ public class Crypto
             char[] chars = Tools.fromRawByteArray(buff);
             sb.append (chars);
         }
+        if (mode)
+            sb.insert (0, header);
         return sb.toString();
     }
 
     /**
      * Enc/De-crypts a String with AES256
-     * @param mode true == encrypt, false == decrypt
      * @param key AES-compatible key, always 32 bytes
      * @param in input string
      * @return transformed string
      * @throws Exception if smth. gone wrong
      */
-    public static String cryptAes256(boolean mode, byte[] key, String in) throws Exception
+    public static String cryptAes256 (byte[] key, String in) throws Exception
     {
+        String header = CryptMethod.AESEncoded.name();
+        boolean mode = true; // encrypt
+        if (in.startsWith(header))
+        {
+            in = in.substring(header.length());
+            mode = false;  // decrypt
+        }
         StringBuilder outbuffer = new StringBuilder();
         StringBuilder inBuilder = new StringBuilder(in);
         char paddingChars;
@@ -167,17 +227,16 @@ public class Crypto
 
         AESEngine aes = new AESEngine();
         aes.init (mode, key);
-        for (;;)
-        {
-            aes.processBlock (all, pos, buff, 0);
+        do {
+            aes.processBlock(all, pos, buff, 0);
             pos += 16;
             char[] chars = Tools.fromRawByteArray(buff);
-            outbuffer.append (chars);
-            if (pos == all.length)
-                break;
-        }
+            outbuffer.append(chars);
+        } while (pos != all.length);
         if (!mode) // decryption: remove padding
             outbuffer.setLength(outbuffer.length()-paddingChars);
+        if (mode)
+            outbuffer.insert (0, header);
         return outbuffer.toString();
     }
 }

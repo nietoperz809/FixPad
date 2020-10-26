@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 public class Tools
 {
@@ -94,6 +95,7 @@ public class Tools
         return value == null || value.trim().isEmpty();
     }
 
+
     public static byte[] toRawByteArray (String in)
     {
         char[] chars = in.toCharArray();
@@ -134,5 +136,37 @@ public class Tools
             return null;
         }
     }
+
+    public static String glueStrings (ArrayList<String> in)
+    {
+        StringBuilder buff = new StringBuilder();
+        for (String s: in)
+            buff.append(s);
+        return buff.toString();
+    }
+
+    public static ArrayList<String> fixedSplit (String in, int partsize)
+    {
+        partsize = partsize <= 0 ? 1 : partsize;
+        ArrayList<String> list = new ArrayList<>();
+        StringBuilder buff = new StringBuilder(in);
+
+        for (int n = 0; n<in.length(); n+= partsize)
+        {
+            try
+            {
+                int end = n+partsize;
+                end = Math.min(end, in.length());
+                String str = buff.substring(n, end);
+                list.add(str);
+            }
+            catch (Exception e)
+            {
+                break;
+            }
+        }
+        return list;
+    }
+
 
 }

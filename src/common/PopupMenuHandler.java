@@ -11,10 +11,12 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 
 public class PopupMenuHandler extends MouseInputAdapter
 {
     private final JPopupMenu popup = new JPopupMenu();
+    public JMenuItem undoItem;
 
     PopupMenuHandler (MyTextArea ta)
     {
@@ -30,14 +32,15 @@ public class PopupMenuHandler extends MouseInputAdapter
         popup.add(codingSubMenu(ta, "Coding"));
         popup.add(cryptoSubMenu(ta, "Crypto"));
         popup.add(new JSeparator());
-        menuOption("Undo", popup, e -> ta.pop());
+        undoItem = menuOption("Undo", popup, e -> ta.pop());
     }
 
-    private void menuOption (String name, JComponent men, ActionListener e)
+    private JMenuItem menuOption (String name, JComponent men, ActionListener e)
     {
         JMenuItem mi = new JMenuItem(name);
         mi.addActionListener(e);
         men.add(mi);
+        return mi;
     }
 
     private JMenu settingSubMenu (MyTextArea ta, String title)
@@ -140,7 +143,6 @@ public class PopupMenuHandler extends MouseInputAdapter
         JMenu men = new JMenu(title);
 
         menuOption("Replace ...", men, e -> {
-            ta.push();
             SearchBox.SbResult res = new SearchBox().run();
             if (res != null)
             {
@@ -152,11 +154,9 @@ public class PopupMenuHandler extends MouseInputAdapter
             }
         });
         menuOption("Center Text", men, e -> {
-            ta.push();
             TextAreaTools.centerText(ta);
         });
         menuOption("Trim Lines", men, e -> {
-            ta.push();
             TextAreaTools.trimLines(ta);
         });
         menuOption("Remove left", men, e -> {
@@ -164,7 +164,6 @@ public class PopupMenuHandler extends MouseInputAdapter
             try
             {
                 int num = Integer.parseInt(s);
-                ta.push();
                 TextAreaTools.removeLeft(ta, num);
             }
             catch (NumberFormatException e1)
@@ -176,7 +175,6 @@ public class PopupMenuHandler extends MouseInputAdapter
             String s = new SingleInputDialog().start("How many chars", "");
             try
             {
-                ta.push();
                 TextAreaTools.insertLeft(ta, s);
             }
             catch (NumberFormatException e1)
@@ -185,27 +183,21 @@ public class PopupMenuHandler extends MouseInputAdapter
             }
         });
         menuOption("Line Number", men, e -> {
-            ta.push();
             TextAreaTools.numberText(ta);
         });
         menuOption("Roman Line Number", men, e -> {
-            ta.push();
             TextAreaTools.romanNumberText(ta);
         });
         menuOption("Upcase", men, e -> {
-            ta.push();
             ta.setText(ta.getText().toUpperCase());
         });
         menuOption("Downcase", men, e -> {
-            ta.push();
             ta.setText(ta.getText().toLowerCase());
         });
         menuOption("Capitalize", men, e -> {
-            ta.push();
             TextAreaTools.capitalize(ta);
         });
         menuOption("Reverse", men, e -> {
-            ta.push();
             String rev = new StringBuilder(ta.getText()).reverse().toString();
             ta.setText(rev);
         });
@@ -218,116 +210,95 @@ public class PopupMenuHandler extends MouseInputAdapter
         JMenu men = new JMenu(title);
 
         menuOption("SHA-256", men, e -> {
-            ta.push();
             String st = new SHA256().transform(ta.getText());
             ta.append("\n" + st);
         });
         menuOption("SHA-1", men, e -> {
-            ta.push();
             String st = new SHA1().transform(ta.getText());
             ta.append("\n" + st);
         });
         menuOption("MD4", men, e -> {
-            ta.push();
             String st = new MD4().transform(ta.getText());
             ta.append("\n" + st);
         });
         menuOption("MD5", men, e -> {
-            ta.push();
             String st = new MD5().transform(ta.getText());
             ta.append("\n" + st);
         });
         menuOption("CRC16", men, e -> {
-            ta.push();
             String st = new CRC16CCITT().transform(ta.getText());
             ta.append("\n" + st);
         });
         men.add(new JSeparator());
         menuOption("UrlEncode", men, e -> {
-            ta.push();
             String st = new UrlEncodeUTF8().transform(ta.getText());
             ta.setText(st);
         });
         menuOption("UrlDecode", men, e -> {
-            ta.push();
             String st = new UrlEncodeUTF8().retransform(ta.getText());
             ta.setText(st);
         });
         men.add(new JSeparator());
         menuOption("Rot13", men, e -> {
-            ta.push();
             String st = new Rot13().transform(ta.getText());
             ta.setText(st);
         });
         menuOption("Reverse Rot13", men, e -> {
-            ta.push();
             String st = new Rot13().retransform(ta.getText());
             ta.setText(st);
         });
         men.add(new JSeparator());
         menuOption("Base64", men, e -> {
-            ta.push();
             String st = new Base64().transform(ta.getText());
             ta.setText(st);
         });
         menuOption("Reverse Base64", men, e -> {
-            ta.push();
             String st = new Base64().retransform(ta.getText());
             ta.setText(st);
         });
         men.add(new JSeparator());
         menuOption("GrayEncode", men, e -> {
-            ta.push();
             String st = new GrayCode().transform(ta.getText());
             ta.setText(st);
         });
         menuOption("GrayDecode", men, e -> {
-            ta.push();
             String st = new GrayCode().retransform(ta.getText());
             ta.setText(st);
         });
         men.add(new JSeparator());
         menuOption("toHexBytes", men, e -> {
-            ta.push();
             String st = new HexBytes().transform(ta.getText());
             ta.setFastText(st);
         });
         menuOption("fromHexBytes", men, e -> {
-            ta.push();
             String st = new HexBytes().retransform(ta.getText());
             ta.setFastText(st);
         });
 
         men.add(new JSeparator());
         menuOption("toAsciiBytes (LOSSY!)", men, e -> {
-            ta.push();
             String st = new AsciiBytes().transform(ta.getText());
             ta.setFastText(st);
         });
         menuOption("fromAsciiBytes", men, e -> {
-            ta.push();
             String st = new AsciiBytes().retransform(ta.getText());
             ta.setFastText(st);
         });
 
         men.add(new JSeparator());
         menuOption("toBinary16", men, e -> {
-            ta.push();
             String st = new Binary(16).transform(ta.getText());
             ta.setFastText(st);
         });
         menuOption("fromBinary16", men, e -> {
-            ta.push();
             String st = new Binary(16).retransform(ta.getText());
             ta.setFastText(st);
         });
         menuOption("toBinary8", men, e -> {
-            ta.push();
             String st = new Binary(8).transform(ta.getText());
             ta.setFastText(st);
         });
         menuOption("fromBinary8", men, e -> {
-            ta.push();
             String st = new Binary(8).retransform(ta.getText());
             ta.setFastText(st);
         });
@@ -339,25 +310,15 @@ public class PopupMenuHandler extends MouseInputAdapter
     {
         JMenu men = new JMenu(title);
 
-        menuOption("HagelinEncrypt", men, e -> {
-            ta.push();
-            String st = new HagelinCrypt().transform(ta.getText());
+        menuOption("HagelinCrypt", men, e -> {
+            String st = Crypto.cryptHagelin(ta.getText());
             ta.setFastText(st);
         });
-        men.add(new JSeparator());
-        menuOption("Pitti1-Encrypt", men, e -> {
-            ta.push();
-            String st = new Pitti1Crypt().transform(ta.getText());
+        menuOption("PittyCrypt", men, e -> {
+            String st = Crypto.cryptPitty(ta.getText());
             ta.setFastText(st);
         });
-        menuOption("Pitti1-Decrypt", men, e -> {
-            ta.push();
-            String st = new Pitti1Crypt().retransform(ta.getText());
-            ta.setFastText(st);
-        });
-        men.add(new JSeparator());
         menuOption("Peter1Crypt", men, e -> {
-            ta.push();
             String pass = new SingleInputDialog().start("Enter Password", "");
             if (!pass.isEmpty())
             {
@@ -373,16 +334,14 @@ public class PopupMenuHandler extends MouseInputAdapter
                 }
             }
         });
-        men.add(new JSeparator());
-        menuOption("AES Encrypt", men, e -> {
-            ta.push();
+        menuOption("AES", men, e -> {
             String pass = new SingleInputDialog().start("Enter Password", "");
             if (!pass.isEmpty())
             {
                 try
                 {
-                    byte[] pwh = Crypto.passwordHash(pass.getBytes("UTF-8"));
-                    String s = Crypto.cryptAes256(true, pwh, ta.getText());
+                    byte[] pwh = Crypto.passwordHash(pass.getBytes(StandardCharsets.UTF_8));
+                    String s = Crypto.cryptAes256(pwh, ta.getText());
                     ta.setFastText(s);
                 }
                 catch (Exception e1)
@@ -391,24 +350,6 @@ public class PopupMenuHandler extends MouseInputAdapter
                 }
             }
         });
-        menuOption("AES Decrypt", men, e -> {
-            ta.push();
-            String pass = new SingleInputDialog().start("Enter Password", "");
-            if (!pass.isEmpty())
-            {
-                try
-                {
-                    byte[] pwh = Crypto.passwordHash(pass.getBytes("UTF-8"));
-                    String s = Crypto.cryptAes256(false, pwh, ta.getText());
-                    ta.setFastText(s);
-                }
-                catch (Exception e1)
-                {
-                    System.out.println(e1);
-                }
-            }
-        });
-
         return men;
     }
 
