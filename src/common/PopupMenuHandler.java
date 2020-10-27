@@ -243,6 +243,13 @@ public class PopupMenuHandler extends MouseInputAdapter
             String st = new Rot13().transform(ta.getText());
             ta.setText(st);
         });
+
+        men.add(new JSeparator());
+        menuOption("RevMiddle", men, e -> {
+            String st = new ReverseMiddle().transform(ta.getText());
+            ta.setText(st);
+        });
+
         menuOption("Reverse Rot13", men, e -> {
             String st = new Rot13().retransform(ta.getText());
             ta.setText(st);
