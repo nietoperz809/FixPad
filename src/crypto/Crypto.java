@@ -14,7 +14,12 @@ public class Crypto
         AESEncoded,
         Peter1Encoded,
         HagelinEncoded,
-        PittyEncoded
+        PittyEncoded;
+
+        String text()
+        {
+            return "*"+name()+"*\n";
+        }
     }
 
     /**
@@ -115,7 +120,7 @@ public class Crypto
 
     public static String cryptPitty (String in)
     {
-        String header = CryptMethod.PittyEncoded.name();
+        String header = CryptMethod.PittyEncoded.text();
         boolean mode = true; // encrypt
         if (in.startsWith(header))
         {
@@ -135,7 +140,7 @@ public class Crypto
 
     public static String cryptHagelin (String in)
     {
-        String header = CryptMethod.HagelinEncoded.name();
+        String header = CryptMethod.HagelinEncoded.text();
         boolean mode = true; // encrypt
         if (in.startsWith(header))
         {
@@ -150,7 +155,7 @@ public class Crypto
 
     public static String cryptFilePeter1 (byte[] key, String in) throws Exception
     {
-        String header = CryptMethod.Peter1Encoded.name();
+        String header = CryptMethod.Peter1Encoded.text();
         boolean mode = true; // encrypt
         if (in.startsWith(header))
         {
@@ -195,7 +200,7 @@ public class Crypto
      */
     public static String cryptAes256 (byte[] key, String in) throws Exception
     {
-        String header = CryptMethod.AESEncoded.name();
+        String header = CryptMethod.AESEncoded.text();
         boolean mode = true; // encrypt
         if (in.startsWith(header))
         {

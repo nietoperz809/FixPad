@@ -168,5 +168,42 @@ public class Tools
         return list;
     }
 
+    /**
+     * Create bool array of case information
+     * @param in any String
+     * @return array containing true if char is ucase, otherwise false
+     */
+    public static boolean[] getCases(String in)
+    {
+        boolean[] cs = new boolean[in.length()];
+        for (int s=0; s<in.length(); s++)
+        {
+            if (Character.isUpperCase(in.charAt(s)))
+                cs[s] = true;
+            else
+                cs[s] = false;
+        }
+        return cs;
+    }
+
+    /**
+     * Restore cases
+     * @param in lowercase string
+     * @param cases array of case information
+     * @return string containing ucase and lcase chars
+     */
+    public static String adjustCases (String in, boolean[] cases)
+    {
+        StringBuilder sb = new StringBuilder();
+        for (int s=0; s<in.length(); s++)
+        {
+            char c = in.charAt(s);
+            if (cases[s])
+                sb.append(Character.toUpperCase(c));
+            else
+                sb.append(c);
+        }
+        return sb.toString();
+    }
 
 }

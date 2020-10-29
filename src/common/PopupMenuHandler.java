@@ -229,6 +229,10 @@ public class PopupMenuHandler extends MouseInputAdapter
             String st = new CRC16CCITT().transform(ta.getText());
             ta.append("\n" + st);
         });
+        menuOption("RevMiddle", men, e -> {
+            String st = new ReverseMiddle().transform(ta.getText());
+            ta.setText(st);
+        });
         men.add(new JSeparator());
         menuOption("UrlEncode", men, e -> {
             String st = new UrlEncodeUTF8().transform(ta.getText());
@@ -243,13 +247,6 @@ public class PopupMenuHandler extends MouseInputAdapter
             String st = new Rot13().transform(ta.getText());
             ta.setText(st);
         });
-
-        men.add(new JSeparator());
-        menuOption("RevMiddle", men, e -> {
-            String st = new ReverseMiddle().transform(ta.getText());
-            ta.setText(st);
-        });
-
         menuOption("Reverse Rot13", men, e -> {
             String st = new Rot13().retransform(ta.getText());
             ta.setText(st);

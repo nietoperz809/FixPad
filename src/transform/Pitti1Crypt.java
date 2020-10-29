@@ -1,5 +1,7 @@
 package transform;
 
+import common.Tools;
+
 import java.util.ArrayList;
 
 import static common.Tools.fixedSplit;
@@ -35,7 +37,8 @@ public class Pitti1Crypt implements Transformation
     {
         char[] exchg = mode ? arr1 : arr2;
 
-        //in = in.toLowerCase();
+        boolean[] cases = Tools.getCases(in);
+        in = in.toLowerCase();
         StringBuilder out = new StringBuilder();
 
         for (int s = 0; s < in.length(); s++)
@@ -50,7 +53,7 @@ public class Pitti1Crypt implements Transformation
             out.append(c1);
         }
 
-        return out.toString();
+        return Tools.adjustCases(out.toString(), cases);
     }
 
     private static String substituteWord(String in, boolean mode, int times)

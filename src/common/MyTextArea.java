@@ -54,7 +54,7 @@ public class MyTextArea extends JTextArea
         if (undoStack == null)
             undoStack = new Stack<>();
         undoStack.push(doc);
-        System.out.println("push");
+        //System.out.println("push");
         updateUndoMenu();
     }
 
