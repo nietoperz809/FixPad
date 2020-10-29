@@ -33,7 +33,7 @@ public class MyTextArea extends JTextArea
     }
 
     /**
-     * Push current Doc on Undo Stack
+     * Push current Doc onto Undo Stack
      */
     public void push()
     {
