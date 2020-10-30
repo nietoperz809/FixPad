@@ -319,8 +319,12 @@ public class PopupMenuHandler extends MouseInputAdapter
             ta.setFastText(st);
         });
         menuOption("PittyCrypt", men, e -> {
-            String st = Crypto.cryptPitty(ta.getText());
-            ta.setFastText(st);
+            String pass = new SingleInputDialog().start("Enter Password", "");
+            if (!pass.isEmpty())
+            {
+                String st = Crypto.cryptPitty(ta.getText(), pass);
+                ta.setFastText(st);
+            }
         });
         menuOption("Peter1Crypt", men, e -> {
             String pass = new SingleInputDialog().start("Enter Password", "");

@@ -136,17 +136,16 @@ public class FixPad
 
             jt.setBackground(new Color(12, 14, 16));
             jt.setForeground(Color.WHITE);
-            Font f = Tools.getFont("Consolas", -1, 20, jt.getFont());
-            if (f != null)
-            {
-                jt.setFont(f);
-            }
+//            Font f = Tools.getFont("Consolas", -1, 20, jt.getFont());
+//            if (f != null)
+//            {
+//                jt.setFont(f);
+//            }
             BlockCaret mc = new BlockCaret();
             jt.setCaret(mc);
-            //mc.startFlashing();
+            mc.startFlashing();
             jt.setCaretColor(Color.ORANGE);
             jt.addMouseListener(new PopupMenuHandler(jt));
-            //System.out.println("tab: "+index);
         }
     }
 }

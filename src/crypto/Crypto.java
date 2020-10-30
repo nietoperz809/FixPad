@@ -2,7 +2,7 @@ package crypto;
 
 import common.Tools;
 import transform.HagelinCrypt;
-import transform.Pitti1Crypt;
+import transform.Pitti3Crypt;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -118,7 +118,7 @@ public class Crypto
         return x;
     }
 
-    public static String cryptPitty (String in)
+    public static String cryptPitty (String in, String passwd)
     {
         String header = CryptMethod.PittyEncoded.text();
         boolean mode = true; // encrypt
@@ -130,11 +130,11 @@ public class Crypto
         String out;
         if (mode)
         {
-            out = new Pitti1Crypt().transform(in);
+            out = new Pitti3Crypt(passwd).transform(in);
             out = header+out;
         }
         else
-            out = new Pitti1Crypt().retransform(in);
+            out = new Pitti3Crypt(passwd).retransform(in);
         return out;
     }
 

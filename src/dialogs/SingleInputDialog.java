@@ -18,7 +18,6 @@ public class SingleInputDialog extends JDialog
     public SingleInputDialog ()
     {
         setContentPane(contentPane);
-        setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
         buttonOK.addActionListener(e -> onOK());
@@ -40,9 +39,8 @@ public class SingleInputDialog extends JDialog
                 KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
                 JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
-        setModal(true);
-        textField1.requestFocusInWindow();
         setLocationRelativeTo(FixPad.mainFrame);
+        setModal(true);
     }
 
     private void onOK ()
@@ -59,11 +57,15 @@ public class SingleInputDialog extends JDialog
 
     public String start (String title, String defaultval)
     {
-        textField1.setCaret(new BlockCaret());
+        BlockCaret car = new BlockCaret();
+        textField1.setCaret(car);
         textField1.setCaretColor(Color.YELLOW);
         textField1.setText(defaultval);
         setTitle(title);
         pack();
+        textField1.grabFocus();
+        textField1.requestFocus();
+        car.startFlashing();
         setVisible(true);
         return textField1.getText();
     }

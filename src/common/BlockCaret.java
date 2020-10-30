@@ -25,11 +25,11 @@ public class BlockCaret extends DefaultCaret
         setBlinkRate(500);
     }
 
-//    public void startFlashing ()
-//    {
-//        setVisible(true);
-//        setSelectionVisible(true);
-//    }
+    public void startFlashing ()
+    {
+        setVisible(true);
+        setSelectionVisible(true);
+    }
 
     protected void damage (Rectangle r)
     {
