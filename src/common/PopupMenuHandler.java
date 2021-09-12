@@ -143,7 +143,7 @@ public class PopupMenuHandler extends MouseInputAdapter
         JMenu men = new JMenu(title);
 
         menuOption("Replace ...", men, e -> {
-            SearchBox.SbResult res = new SearchBox().run();
+            SearchBox.SbResult res = new SearchBox().start();
             if (res != null)
             {
                 if (!(res.from.isEmpty() || res.to.isEmpty()))

@@ -11,6 +11,7 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -18,13 +19,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import static common.Tools.pack;
+
 public class FixPad
 {
     private final static DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     private final ArrayList<MyTextArea> list = new ArrayList<>();
     private final FileManager fman = new FileManager();
-    private JPanel panel1;
+    private final JPanel panel1;
 
     public static JFrame mainFrame;
     public static JTabbedPane mainTab;
@@ -53,7 +56,15 @@ public class FixPad
 
     public static void main (String[] args)
     {
-        //UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
+        try {
+            pack(FileManager.homePath, FileManager.backupPath
+                    +File.separator
+                    +"zipped"
+                    +System.currentTimeMillis()
+                    +".zip");
+        } catch (IOException e) {
+            System.out.println("zipping fail");
+        }
         SwingUtilities.invokeLater(() ->
         {
             mainFrame = new JFrame("FixPad");

@@ -1,5 +1,6 @@
 package settings;
 
+import common.FileManager;
 import common.FixPad;
 import common.ObjectReader;
 import common.ObjectWriter;
@@ -15,7 +16,7 @@ public class MainWindowSettings implements Serializable
 {
     private int x, y, width, height, activeTab;
     private transient final static String fname
-            = System.getProperty("user.home") + File.separator + "FPglobal";
+            = FileManager.homePath + File.separator + "FPglobal";
 
     public static void save()
     {

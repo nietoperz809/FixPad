@@ -159,7 +159,7 @@ public class TextAreaTools
     {
         BufferedImage fake1 = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         Graphics2D fake2 = fake1.createGraphics();
-       return fake2.getFontMetrics(ta.getFont());
+        return fake2.getFontMetrics(ta.getFont());
     }
 
     /**

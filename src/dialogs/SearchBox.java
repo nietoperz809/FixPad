@@ -1,5 +1,6 @@
 package dialogs;
 
+import common.BlockCaret;
 import common.FixPad;
 
 import javax.swing.*;
@@ -167,9 +168,19 @@ public class SearchBox extends JDialog {
         dispose();
     }
 
-    public SbResult run() {
+    public SbResult start()
+    {
+        BlockCaret car = new BlockCaret();
+        BlockCaret car2 = new BlockCaret();
+        textField1.setCaret(car);
+        textField1.setCaretColor(Color.BLACK);
+        textField2.setCaret(car2);
+        textField2.setCaretColor(Color.BLACK);
         setSize(300, 200);
         setTitle("Search'n'replace");
+        textField1.grabFocus();
+        textField1.requestFocus();
+        car.startFlashing();
         setVisible(true);
         return result;
     }

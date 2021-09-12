@@ -14,10 +14,17 @@ import java.util.concurrent.TimeUnit;
 
 public class FileManager implements Runnable
 {
-    private ArrayList<MyTextArea> list; // = new ArrayList<>();
-    private final String homePath = System.getProperty("user.home");
+    private ArrayList<MyTextArea> list; 
+    public static final String homePath = System.getProperty("user.home") + File.separator + "fixpad";
+    public static final String backupPath = homePath + File.separator +"backup";
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
+    static {
+        File directory = new File(backupPath);
+        if (!directory.exists()) {
+            boolean mkdir = directory.mkdir();
+        }
+    }
 
     public void put (ArrayList<MyTextArea> otherList)
     {
@@ -124,9 +131,13 @@ public class FileManager implements Runnable
             String suffix = n+": "+jp.getTabTitle();
             PlainDocument doc = (PlainDocument) jp.getDocument();
             if (!save(doc, fname))
-                FixPad.setStatusBar("No need to save " + suffix);
+            {
+                //FixPad.setStatusBar("No need to save " + suffix);
+            }
             else
+            {
                 FixPad.setStatusBar("Saved Tab " +suffix);
+            }
             if (wait)
             {
                 try

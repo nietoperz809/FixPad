@@ -1,9 +1,6 @@
 package settings;
 
-import common.FixPad;
-import common.MyTextArea;
-import common.ObjectReader;
-import common.ObjectWriter;
+import common.*;
 
 import java.awt.*;
 import java.io.File;
@@ -24,7 +21,8 @@ public class TextAreaSettings implements Serializable
     private String tabTitle;
 
     private transient final static String fname
-            = System.getProperty("user.home") + File.separator + "FPsettings";
+            = FileManager.homePath + File.separator + "FPsettings";
+
 
     static public void save (ArrayList<MyTextArea> list)
     {
