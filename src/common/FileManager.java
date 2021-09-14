@@ -7,6 +7,7 @@ import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectStreamClass;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -14,16 +15,18 @@ import java.util.concurrent.TimeUnit;
 
 public class FileManager implements Runnable
 {
-    private ArrayList<MyTextArea> list; 
-    public static final String homePath = System.getProperty("user.home") + File.separator + "fixpad";
-    public static final String backupPath = homePath + File.separator +"backup";
+    private ArrayList<MyTextArea> list;
+    public static final String homePath;
+    public static final String backupPath;
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     static {
-        File directory = new File(backupPath);
-        if (!directory.exists()) {
-            boolean mkdir = directory.mkdir();
-        }
+        homePath = System.getProperty("user.home") + File.separator
+                + "fixpad" + System.getProperty("java.version");
+        backupPath = homePath + File.separator +"backup";
+
+        Tools.mkdir(homePath);
+        Tools.mkdir(backupPath);
     }
 
     public void put (ArrayList<MyTextArea> otherList)
@@ -57,7 +60,7 @@ public class FileManager implements Runnable
         catch (Exception e)
         {
             System.out.println("In fileman stop:");
-            System.out.println(e);
+            System.out.println(e.getMessage());
         }
         TextAreaSettings.save(list);
         MainWindowSettings.save();
@@ -116,7 +119,8 @@ public class FileManager implements Runnable
             }
             catch (Exception e)
             {
-                System.out.println("failed to load doc: "+n);
+                System.out.println("failed to load doc: "+fname);
+                System.out.println(e.getMessage());
             }
             //System.out.println("load: "+n);
         }                            

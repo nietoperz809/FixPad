@@ -76,7 +76,6 @@ public class Tools {
         return value == null || value.trim().isEmpty();
     }
 
-
     public static byte[] toRawByteArray(String in) {
         char[] chars = in.toCharArray();
         byte[] bytes = new byte[chars.length * 2];
@@ -171,7 +170,13 @@ public class Tools {
         return sb.toString();
     }
 
-    public static void pack(String sourceDirPath, String zipFilePath) throws IOException {
+    /**
+     * Zip all files in a folder (except other folders and zip files)
+     * @param sourceDirPath Dir were source files are
+     * @param zipFilePath Path to new Zip file
+     * @throws IOException if smth gone wrong
+     */
+    public static void packToZip(String sourceDirPath, String zipFilePath) throws IOException {
         Path p;
         p = Files.createFile(Paths.get(zipFilePath));
         try (ZipOutputStream zs = new ZipOutputStream(Files.newOutputStream(p))) {
@@ -191,5 +196,18 @@ public class Tools {
                         }
                     });
         }
+    }
+
+    /**
+     * Makes dir if it doesn't exist
+     * @param path path of the dir
+     * @return tue if dir created or already exists
+     */
+    public static boolean mkdir (String path)
+    {
+        File directory = new File (path);
+        if (directory.exists())
+            return true;
+        return directory.mkdir();
     }
 }

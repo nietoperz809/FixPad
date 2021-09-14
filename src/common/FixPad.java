@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import static common.Tools.pack;
+import static common.Tools.packToZip;
 
 public class FixPad
 {
@@ -57,7 +57,7 @@ public class FixPad
     public static void main (String[] args)
     {
         try {
-            pack(FileManager.homePath, FileManager.backupPath
+            packToZip(FileManager.homePath, FileManager.backupPath
                     +File.separator
                     +"zipped"
                     +System.currentTimeMillis()

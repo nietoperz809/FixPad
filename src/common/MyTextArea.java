@@ -102,7 +102,6 @@ public class MyTextArea extends JTextArea
      */
     public void setFastText(String s)
     {
-        //System.out.println("setfast "+s);
         push();
         PlainDocument doc = new PlainDocument();
         try
@@ -112,7 +111,8 @@ public class MyTextArea extends JTextArea
         }
         catch (BadLocationException e1)
         {
-            System.out.println(e1);
+            System.out.println(e1.getClass().getName());
+            System.out.println(e1.toString());
         }
     }
 
