@@ -106,7 +106,7 @@ public class FileManager implements Runnable
         return true;
     }
 
-    private void loadEditors()
+    private synchronized void loadEditors()
     {
         for (int n=0; n<list.size(); n++)
         {
@@ -126,7 +126,7 @@ public class FileManager implements Runnable
         }                            
     }
 
-    private void saveEditors (boolean wait)
+    private synchronized void saveEditors (boolean wait)
     {
         for (int n=0; n<list.size(); n++)
         {

@@ -15,9 +15,6 @@ import java.awt.*;
  */
 public class FontChooser2 extends JDialog
 {
-
-    // Results:
-
     /**
      * The index of the default size (e.g., 14 point == 4)
      */

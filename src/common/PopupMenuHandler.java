@@ -1,6 +1,7 @@
 package common;
 
 import crypto.Crypto;
+import dialogs.DataSetDialog;
 import dialogs.SearchBox;
 import dialogs.SingleInputDialog;
 import transform.*;
@@ -33,6 +34,8 @@ public class PopupMenuHandler extends MouseInputAdapter
         popup.add(cryptoSubMenu(ta, "Crypto"));
         popup.add(new JSeparator());
         undoItem = menuOption("Undo", popup, e -> ta.pop());
+        popup.add(new JSeparator());
+        menuOption("Dataset ...", popup, e -> DataSetDialog.start());
     }
 
     private JMenuItem menuOption (String name, JComponent men, ActionListener e)
