@@ -6,6 +6,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -210,4 +212,26 @@ public class Tools {
             return true;
         return directory.mkdir();
     }
+
+    public static Field makeAccessible (Class<?> o, String name) throws Exception {
+        // Get field instance
+        Field f = o.getDeclaredField( name);
+        f.setAccessible(true);
+        // Remove "final" modifier
+        Field modifiersField = Field.class.getDeclaredField("modifiers");
+        modifiersField.setAccessible(true);
+        modifiersField.setInt(f, f.getModifiers() & ~Modifier.FINAL);
+        return f;
+    }
+
+    public static long fetchSvuid (Class<?> o) throws Exception {
+        Field f = makeAccessible (o, "serialVersionUID");
+        return f.getLong(null);
+    }
+
+    public static void changeSvuid (Class<?> o, long newUID) throws Exception {
+        Field f = makeAccessible (o, "serialVersionUID");
+        f.setLong(null, newUID);
+    }
+
 }

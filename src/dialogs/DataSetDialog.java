@@ -1,9 +1,12 @@
 package dialogs;
 
+import common.FileManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.util.List;
 
 public class DataSetDialog extends JDialog {
     private JPanel contentPane;
@@ -56,7 +59,13 @@ public class DataSetDialog extends JDialog {
     }
 
     private void onOK() {
-        // add your code here if necessary
+        //int i = list1.getSelectedIndex();
+        List<File> lf = list1.getSelectedValuesList();
+        if (lf.size() == 1) {
+            String s = lf.get(0).getName();
+            System.out.println(s);
+            FileManager.loadFromNewPath(System.getProperty("user.home") + File.separator + s);
+        }
         dispose();
     }
 

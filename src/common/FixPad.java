@@ -26,7 +26,7 @@ public class FixPad
     private final static DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     private final ArrayList<MyTextArea> list = new ArrayList<>();
-    private final FileManager fman = new FileManager();
+    public static final FileManager fman = new FileManager();
     private final JPanel panel1;
 
     public static JFrame mainFrame;

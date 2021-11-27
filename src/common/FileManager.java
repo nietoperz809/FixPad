@@ -3,11 +3,16 @@ package common;
 import settings.MainWindowSettings;
 import settings.TextAreaSettings;
 
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectStreamClass;
+import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -16,9 +21,15 @@ import java.util.concurrent.TimeUnit;
 public class FileManager implements Runnable
 {
     private ArrayList<MyTextArea> list;
-    public static final String homePath;
+    public static String homePath;
     public static final String backupPath;
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+    public static void loadFromNewPath (String path)
+    {
+        homePath = path;
+        FixPad.fman.loadEditors();
+    }
 
     static {
         homePath = System.getProperty("user.home") + File.separator
@@ -66,47 +77,30 @@ public class FileManager implements Runnable
         MainWindowSettings.save();
     }
 
-    private PlainDocument load (String fname) throws IOException, ClassNotFoundException
+    synchronized private PlainDocument load (String fname) throws IOException, ClassNotFoundException
     {
-        ObjectReader re = new ObjectReader(fname);
-        PlainDocument pd = (PlainDocument) re.getObject();
-        re.close();
+        String content = new String(Files.readAllBytes(Paths.get(fname)),
+                StandardCharsets.UTF_8);
+        PlainDocument pd = new PlainDocument();
+        try {
+            pd.insertString(0, content, null);
+        } catch (BadLocationException e) {
+            return null;
+        }
         return pd;
     }
 
-    private boolean save (PlainDocument doc, String fname)
-    {
-//        if (doc.getLength() == 0)
-//            return false;
-        try
-        {
-            PlainDocument pd2 = load (fname);
-            String t1 = pd2.getText (0, pd2.getLength());
-            String t2 = doc.getText (0, doc.getLength());
-            if (t1.equals(t2))
-            {
-                return false; // nothing to save
-            }
-        }
-        catch (Exception e)
-        {
-            // fall through
-        }
-        try
-        {
-            ObjectWriter wr = new ObjectWriter(fname);
-            wr.putObject(doc);
-            wr.close();
-        }
-        catch (IOException e)
-        {
-            System.out.println("in fileman save");
-            System.out.println(e);
+    synchronized private boolean save (PlainDocument doc, String fname) {
+        try {
+            String content = doc.getText(0, doc.getLength());
+            Files.write( Paths.get(fname), content.getBytes());
+        } catch (Exception e) {
+            return false;
         }
         return true;
     }
 
-    private synchronized void loadEditors()
+    private void loadEditors()
     {
         for (int n=0; n<list.size(); n++)
         {
@@ -126,7 +120,7 @@ public class FileManager implements Runnable
         }                            
     }
 
-    private synchronized void saveEditors (boolean wait)
+    private void saveEditors (boolean wait)
     {
         for (int n=0; n<list.size(); n++)
         {
@@ -159,7 +153,9 @@ public class FileManager implements Runnable
 
     private String createFname (int n)
     {
-        return homePath + File.separator + "pane" + n;
+        String out = homePath + File.separator + "pane" + n;
+        //System.out.println(out);
+        return out;
     }
 
     public void run()
