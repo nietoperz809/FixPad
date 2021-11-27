@@ -213,6 +213,13 @@ public class Tools {
         return directory.mkdir();
     }
 
+    /**
+     * Make a static final class member accessible
+     * @param o The class
+     * @param name name of the variable
+     * @return a "Field" to access the varieble
+     * @throws Exception if smth. went wrong
+     */
     public static Field makeAccessible (Class<?> o, String name) throws Exception {
         // Get field instance
         Field f = o.getDeclaredField( name);
@@ -224,14 +231,25 @@ public class Tools {
         return f;
     }
 
+    /**
+     * Read SerialVersionUID of any class
+     * @param o the class
+     * @return SV-UID value
+     * @throws Exception id smth. went wrong
+     */
     public static long fetchSvuid (Class<?> o) throws Exception {
         Field f = makeAccessible (o, "serialVersionUID");
         return f.getLong(null);
     }
 
+    /**
+     * Change SerialVersionUID of any class
+     * @param o The class
+     * @param newUID The new value
+     * @throws Exception If smth. went wrong
+     */
     public static void changeSvuid (Class<?> o, long newUID) throws Exception {
         Field f = makeAccessible (o, "serialVersionUID");
         f.setLong(null, newUID);
     }
-
 }
