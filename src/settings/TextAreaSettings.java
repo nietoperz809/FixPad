@@ -1,6 +1,7 @@
 package settings;
 
 import common.*;
+import database.DBHandler;
 
 import java.awt.*;
 import java.io.File;
@@ -20,8 +21,7 @@ public class TextAreaSettings implements Serializable
     private boolean editable;
     private String tabTitle;
 
-    private transient final static String fname
-            = FileManager.homePath + File.separator + "FPsettings";
+    private transient final static String fname = "FPsettings";
 
 
     static public void save (ArrayList<MyTextArea> list)
@@ -29,9 +29,8 @@ public class TextAreaSettings implements Serializable
         String tabTitle = "??";
         try
         {
-            ObjectWriter ow = new ObjectWriter(fname);
-            for (MyTextArea jt : list)
-            {
+            for (int n=0; n<list.size(); n++) {
+                MyTextArea jt = list.get(n);
                 tabTitle = jt.getTabTitle();
                 TextAreaSettings st = new TextAreaSettings();
                 st.font = jt.getFont();
@@ -43,11 +42,10 @@ public class TextAreaSettings implements Serializable
                 st.linewrap = jt.getLineWrap();
                 st.editable = jt.isEditable();
                 st.tabTitle = tabTitle;
-                ow.putObject(st);
+                DBHandler.getInst().storeObject(fname+n, st);
             }
-            ow.close();
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             FixPad.setStatusBar("TA settings / " + tabTitle + " / "+e);
         }
@@ -57,10 +55,9 @@ public class TextAreaSettings implements Serializable
     {
         try
         {
-            ObjectReader or = new ObjectReader(fname);
-            for (MyTextArea jt : list)
-            {
-                TextAreaSettings st = (TextAreaSettings) or.getObject();
+            for (int n=0; n<list.size(); n++) {
+                MyTextArea jt = list.get(n);
+                TextAreaSettings st = (TextAreaSettings) DBHandler.getInst().fetchObject(fname+n);
                 jt.setFont(st.font);
                 jt.setCaretColor(st.caretcol);
                 jt.setForeground(st.fgcol);
@@ -73,7 +70,6 @@ public class TextAreaSettings implements Serializable
                 jt.getTpane().setBackgroundAt(jt.getTabIndex(), st.tabColor);
 
             }
-            or.close();
         }
         catch (Exception e)
         {

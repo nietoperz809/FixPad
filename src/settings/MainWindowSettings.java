@@ -2,8 +2,7 @@ package settings;
 
 import common.FileManager;
 import common.FixPad;
-import common.ObjectReader;
-import common.ObjectWriter;
+import database.DBHandler;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,11 +27,9 @@ public class MainWindowSettings implements Serializable
         mw.activeTab = mainTab.getSelectedIndex();
         try
         {
-            ObjectWriter ow = new ObjectWriter(fname);
-            ow.putObject(mw);
-            ow.close();
+            DBHandler.getInst().storeObject(fname, mw);
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             FixPad.setStatusBar("MW save / "+e);
         }
@@ -42,12 +39,10 @@ public class MainWindowSettings implements Serializable
     {
         try
         {
-            ObjectReader or = new ObjectReader(fname);
-            MainWindowSettings mws = (MainWindowSettings) or.getObject();
+            MainWindowSettings mws = (MainWindowSettings) DBHandler.getInst().fetchObject(fname);
             mainFrame.setLocation(mws.x, mws.y);
             mainFrame.setSize(mws.width, mws.height);
             mainTab.setSelectedIndex(mws.activeTab);
-            or.close();
         }
         catch (Exception e)
         {

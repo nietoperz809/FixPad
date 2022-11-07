@@ -18,41 +18,35 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class FileManager implements Runnable
-{
-    private ArrayList<MyTextArea> list;
-    public static String homePath;
+public class FileManager implements Runnable {
     public static final String backupPath;
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-
-    public static void loadFromNewPath (String path)
-    {
-        homePath = path;
-        FixPad.fman.loadEditors();
-    }
+    public static String homePath;
 
     static {
         homePath = System.getProperty("user.home") + File.separator
                 + "fixpad" + System.getProperty("java.version");
-        backupPath = homePath + File.separator +"backup";
+        backupPath = homePath + File.separator + "backup";
 
         Tools.mkdir(homePath);
         Tools.mkdir(backupPath);
     }
 
-    public void put (ArrayList<MyTextArea> otherList)
-    {
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private ArrayList<MyTextArea> list;
+
+    public static void loadFromNewPath(String path) {
+        homePath = path;
+        FixPad.fman.loadEditors();
+    }
+
+    public void put(ArrayList<MyTextArea> otherList) {
         list = otherList;
     }
 
-    public void start()
-    {
-        try
-        {
+    public void start() {
+        try {
             loadEditors();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println("in fileman start:");
             System.out.println(e);
         }
@@ -61,15 +55,11 @@ public class FileManager implements Runnable
         scheduler.scheduleAtFixedRate(this, 10, 30, TimeUnit.SECONDS);
     }
 
-    public void stop()
-    {
+    public void stop() {
         scheduler.shutdown();
-        try
-        {
+        try {
             saveEditors(false);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println("In fileman stop:");
             System.out.println(e.getMessage());
         }
@@ -77,8 +67,7 @@ public class FileManager implements Runnable
         MainWindowSettings.save();
     }
 
-    synchronized private PlainDocument load (String fname) throws IOException, ClassNotFoundException
-    {
+    synchronized private PlainDocument load(String fname) throws IOException, ClassNotFoundException {
         String content = new String(Files.readAllBytes(Paths.get(fname)),
                 StandardCharsets.UTF_8);
         PlainDocument pd = new PlainDocument();
@@ -90,60 +79,46 @@ public class FileManager implements Runnable
         return pd;
     }
 
-    synchronized private boolean save (PlainDocument doc, String fname) {
+    synchronized private boolean save(PlainDocument doc, String fname) {
         try {
             String content = doc.getText(0, doc.getLength());
-            Files.write( Paths.get(fname), content.getBytes());
+            Files.write(Paths.get(fname), content.getBytes());
         } catch (Exception e) {
             return false;
         }
         return true;
     }
 
-    private void loadEditors()
-    {
-        for (int n=0; n<list.size(); n++)
-        {
+    private void loadEditors() {
+        for (int n = 0; n < list.size(); n++) {
             MyTextArea jp = list.get(n);
             String fname = createFname(n);
-            try
-            {
-                Document doc = load (fname);
+            try {
+                Document doc = load(fname);
                 jp.setDocument(doc);
-            }
-            catch (Exception e)
-            {
-                System.out.println("failed to load doc: "+fname);
+            } catch (Exception e) {
+                System.out.println("failed to load doc: " + fname);
                 System.out.println(e.getMessage());
             }
             //System.out.println("load: "+n);
-        }                            
+        }
     }
 
-    private void saveEditors (boolean wait)
-    {
-        for (int n=0; n<list.size(); n++)
-        {
+    private void saveEditors(boolean wait) {
+        for (int n = 0; n < list.size(); n++) {
             MyTextArea jp = list.get(n);
             String fname = createFname(n);
-            String suffix = n+": "+jp.getTabTitle();
+            String suffix = n + ": " + jp.getTabTitle();
             PlainDocument doc = (PlainDocument) jp.getDocument();
-            if (!save(doc, fname))
-            {
+            if (!save(doc, fname)) {
                 //FixPad.setStatusBar("No need to save " + suffix);
+            } else {
+                FixPad.setStatusBar("Saved Tab " + suffix);
             }
-            else
-            {
-                FixPad.setStatusBar("Saved Tab " +suffix);
-            }
-            if (wait)
-            {
-                try
-                {
+            if (wait) {
+                try {
                     Thread.sleep(1000);
-                }
-                catch (InterruptedException e)
-                {
+                } catch (InterruptedException e) {
                     return;
                     //FixPad.setStatusBar("Failed to save Tab "+n+" / "+e);
                 }
@@ -151,23 +126,18 @@ public class FileManager implements Runnable
         }
     }
 
-    private String createFname (int n)
-    {
+    private String createFname(int n) {
         String out = homePath + File.separator + "pane" + n;
         //System.out.println(out);
         return out;
     }
 
-    public void run()
-    {
+    public void run() {
         FixPad.setStatusBar("Autosave");
-        try
-        {
+        try {
             saveEditors(true);
-        }
-        catch (Exception e)
-        {
-            FixPad.setStatusBar("Timerproc / "+e);
+        } catch (Exception e) {
+            FixPad.setStatusBar("Timerproc / " + e);
         }
         TextAreaSettings.save(list);
         MainWindowSettings.save();

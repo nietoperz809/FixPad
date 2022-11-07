@@ -1,6 +1,7 @@
 package common;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -16,6 +17,12 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class Tools {
+
+    public static void Error (String msg)
+    {
+        JOptionPane.showMessageDialog(null, msg, "Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
     public static Font getFont(String fontName, int style, int size, Font currentFont) {
         if (currentFont == null) {
             return null;
@@ -52,15 +59,14 @@ public class Tools {
         }
     }
 
-    public static int findAndSelect(java.awt.List li, String s) {
+    public static void findAndSelect(List li, String s) {
         for (int i = 0; i < li.getItemCount(); i++) {
             String item = li.getItem(i);
             if (item.equals(s)) {
                 li.select(i);
-                return i;
+                return;
             }
         }
-        return -1;
     }
 
     public static String ensureMinLength(String in, int min) {
@@ -174,8 +180,9 @@ public class Tools {
 
     /**
      * Zip all files in a folder (except other folders and zip files)
-     * @param sourceDirPath Dir were source files are
-     * @param zipFilePath Path to new Zip file
+     *
+     * @param sourceDirPath Dir where source files are
+     * @param zipFilePath   Path to new Zip file
      * @throws IOException if smth gone wrong
      */
     public static void packToZip(String sourceDirPath, String zipFilePath) throws IOException {
@@ -202,27 +209,27 @@ public class Tools {
 
     /**
      * Makes dir if it doesn't exist
+     *
      * @param path path of the dir
-     * @return tue if dir created or already exists
      */
-    public static boolean mkdir (String path)
-    {
-        File directory = new File (path);
+    public static void mkdir(String path) {
+        File directory = new File(path);
         if (directory.exists())
-            return true;
-        return directory.mkdir();
+            return;
+        directory.mkdir();
     }
 
     /**
      * Make a static final class member accessible
-     * @param o The class
+     *
+     * @param o    The class
      * @param name name of the variable
      * @return a "Field" to access the varieble
      * @throws Exception if smth. went wrong
      */
-    public static Field makeAccessible (Class<?> o, String name) throws Exception {
+    public static Field makeAccessible(Class<?> o, String name) throws Exception {
         // Get field instance
-        Field f = o.getDeclaredField( name);
+        Field f = o.getDeclaredField(name);
         f.setAccessible(true);
         // Remove "final" modifier
         Field modifiersField = Field.class.getDeclaredField("modifiers");
@@ -233,23 +240,40 @@ public class Tools {
 
     /**
      * Read SerialVersionUID of any class
+     *
      * @param o the class
      * @return SV-UID value
      * @throws Exception id smth. went wrong
      */
-    public static long fetchSvuid (Class<?> o) throws Exception {
-        Field f = makeAccessible (o, "serialVersionUID");
+    public static long fetchSvuid(Class<?> o) throws Exception {
+        Field f = makeAccessible(o, "serialVersionUID");
         return f.getLong(null);
     }
 
     /**
      * Change SerialVersionUID of any class
-     * @param o The class
+     *
+     * @param o      The class
      * @param newUID The new value
      * @throws Exception If smth. went wrong
      */
-    public static void changeSvuid (Class<?> o, long newUID) throws Exception {
-        Field f = makeAccessible (o, "serialVersionUID");
+    public static void changeSvuid(Class<?> o, long newUID) throws Exception {
+        Field f = makeAccessible(o, "serialVersionUID");
         f.setLong(null, newUID);
+    }
+
+    public static Color invertColor(Color c) {
+        int a = c.getAlpha();
+        int r = 255 - c.getRed();
+        int g = 255 - c.getGreen();
+        int b = 255 - c.getBlue();
+
+        // if the resulting color is to light (e.g. initial color is black, resulting color is white...)
+        if ((r + g + b > 740) || (r + g + b < 20)) {
+            // return a standard yellow
+            return new Color(255, 255, 40, a);
+        } else {
+            return new Color(r, g, b, a);
+        }
     }
 }
