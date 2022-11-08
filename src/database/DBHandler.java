@@ -19,12 +19,6 @@ public class DBHandler {
             String pwd = "dumm";
             connection = DriverManager.getConnection(url, user, pwd);
             statement = connection.createStatement();
-//            Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    closeConnection();
-//                }
-//            }));
         } catch (SQLException e) {
             common.Tools.Error(e.getMessage());
             System.exit(-1);
@@ -39,19 +33,18 @@ public class DBHandler {
     public static DBHandler getInst() {
         if (_inst == null) {
             _inst = new DBHandler();
+            _inst.execute("create table if not exists OBJSTORE (name varchar(255) primary key, " +
+                    "object blob, time timestamp default current_timestamp())");
         }
         return _inst;
     }
 
-    public static void main(String[] args) throws Exception {
-        //getInst().execute("drop table OBJSTORE");
-        //getInst().execute("create table if not exists OBJSTORE (name varchar(255) primary key, " +
-        //"object blob, time timestamp default current_timestamp())");
-        getInst().storeObject("test3", new byte[]{1, 2, 3});
-
-        Object o = getInst().fetchObject("test3");
-        System.out.println(o);
-    }
+//    public static void main(String[] args) throws Exception {
+//        //getInst().execute("drop table OBJSTORE");
+//        //getInst().execute("create table if not exists OBJSTORE (name varchar(255) primary key, " +
+//        //"object blob, time timestamp default current_timestamp())");
+//        getInst().execute("call csvwrite ('./db.csv', 'select * from objstore')");
+//    }
 
     private ResultSet query(String txt) {
         try {
@@ -95,12 +88,13 @@ public class DBHandler {
     }
 
     public Object fetchObject(String name) throws Exception {
-        ResultSet res = query("select object from OBJSTORE where name = '" + name + "'");
-        if (res.next()) {
-            byte[] b = res.getBytes(1);
-            ByteArrayInputStream bis = new ByteArrayInputStream(b);
-            ObjectInput in = new ObjectInputStream(bis);
-            return in.readObject();
+        try (ResultSet res = query("select object from OBJSTORE where name = '" + name + "'")) {
+            if (res.next()) {
+                byte[] b = res.getBytes(1);
+                ByteArrayInputStream bis = new ByteArrayInputStream(b);
+                ObjectInput in = new ObjectInputStream(bis);
+                return in.readObject();
+            }
         }
         return null;
     }

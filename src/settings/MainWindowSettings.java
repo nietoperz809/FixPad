@@ -14,8 +14,7 @@ import static common.FixPad.mainTab;
 public class MainWindowSettings implements Serializable
 {
     private int x, y, width, height, activeTab;
-    private transient final static String fname
-            = FileManager.homePath + File.separator + "FPglobal";
+    private transient final static String fname = "FPglobal";
 
     public static void save()
     {

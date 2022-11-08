@@ -1,5 +1,6 @@
 package common;
 
+import database.DBHandler;
 import settings.MainWindowSettings;
 import settings.TextAreaSettings;
 
@@ -19,25 +20,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class FileManager implements Runnable {
-    public static final String backupPath;
-    public static String homePath;
-
-    static {
-        homePath = System.getProperty("user.home") + File.separator
-                + "fixpad" + System.getProperty("java.version");
-        backupPath = homePath + File.separator + "backup";
-
-        Tools.mkdir(homePath);
-        Tools.mkdir(backupPath);
-    }
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private ArrayList<MyTextArea> list;
-
-    public static void loadFromNewPath(String path) {
-        homePath = path;
-        FixPad.fman.loadEditors();
-    }
 
     public void put(ArrayList<MyTextArea> otherList) {
         list = otherList;
@@ -52,7 +37,7 @@ public class FileManager implements Runnable {
         }
         MainWindowSettings.load();
         TextAreaSettings.load(list);
-        scheduler.scheduleAtFixedRate(this, 10, 30, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(this, 10, 60, TimeUnit.SECONDS);
     }
 
     public void stop() {
@@ -67,9 +52,10 @@ public class FileManager implements Runnable {
         MainWindowSettings.save();
     }
 
-    synchronized private PlainDocument load(String fname) throws IOException, ClassNotFoundException {
-        String content = new String(Files.readAllBytes(Paths.get(fname)),
-                StandardCharsets.UTF_8);
+    synchronized private PlainDocument load(String fname) throws Exception {
+        String content = (String)(DBHandler.getInst().fetchObject(fname));
+        //new String(Files.readAllBytes(Paths.get(fname)),
+                // StandardCharsets.UTF_8);
         PlainDocument pd = new PlainDocument();
         try {
             pd.insertString(0, content, null);
@@ -82,7 +68,7 @@ public class FileManager implements Runnable {
     synchronized private boolean save(PlainDocument doc, String fname) {
         try {
             String content = doc.getText(0, doc.getLength());
-            Files.write(Paths.get(fname), content.getBytes());
+            DBHandler.getInst().storeObject(fname, content);
         } catch (Exception e) {
             return false;
         }
@@ -100,7 +86,6 @@ public class FileManager implements Runnable {
                 System.out.println("failed to load doc: " + fname);
                 System.out.println(e.getMessage());
             }
-            //System.out.println("load: "+n);
         }
     }
 
@@ -110,9 +95,7 @@ public class FileManager implements Runnable {
             String fname = createFname(n);
             String suffix = n + ": " + jp.getTabTitle();
             PlainDocument doc = (PlainDocument) jp.getDocument();
-            if (!save(doc, fname)) {
-                //FixPad.setStatusBar("No need to save " + suffix);
-            } else {
+            if (save(doc, fname)) {
                 FixPad.setStatusBar("Saved Tab " + suffix);
             }
             if (wait) {
@@ -120,16 +103,13 @@ public class FileManager implements Runnable {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     return;
-                    //FixPad.setStatusBar("Failed to save Tab "+n+" / "+e);
                 }
             }
         }
     }
 
     private String createFname(int n) {
-        String out = homePath + File.separator + "pane" + n;
-        //System.out.println(out);
-        return out;
+        return "pane" + n;
     }
 
     public void run() {

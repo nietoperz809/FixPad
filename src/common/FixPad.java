@@ -62,15 +62,15 @@ public class FixPad {
     }
 
     public static void main(String[] args) {
-        try {
-            packToZip(FileManager.homePath, FileManager.backupPath
-                    + File.separator
-                    + "zipped"
-                    + System.currentTimeMillis()
-                    + ".zip");
-        } catch (IOException e) {
-            System.out.println("zipping fail");
-        }
+//        try {
+//            packToZip(FileManager.homePath, FileManager.backupPath
+//                    + File.separator
+//                    + "zipped"
+//                    + System.currentTimeMillis()
+//                    + ".zip");
+//        } catch (IOException e) {
+//            System.out.println("zipping fail");
+//        }
         SwingUtilities.invokeLater(() ->
         {
             mainFrame = new JFrame("FixPad");
