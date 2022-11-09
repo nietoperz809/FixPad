@@ -221,7 +221,7 @@ public class TextAreaTools {
         Rectangle rc = ta.getVisibleRect();
         BufferedImage bimage = new BufferedImage(rc.width,
                 rc.height,
-                BufferedImage.TYPE_INT_ARGB);
+                BufferedImage.TYPE_INT_RGB);
         Graphics2D bGr = bimage.createGraphics();
 
         bGr.setColor(ta.getBackground());

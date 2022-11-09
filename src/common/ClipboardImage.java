@@ -9,10 +9,8 @@ public class ClipboardImage implements ClipboardOwner
     {
         try
         {
-            //Robot robot = new Robot();
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
             Rectangle screen = new Rectangle(screenSize);
-            //BufferedImage i = robot.createScreenCapture(screen);
             TransferableImage trans = new TransferableImage(i);
             Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
             c.setContents(trans, this);
