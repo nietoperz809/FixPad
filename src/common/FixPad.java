@@ -40,10 +40,6 @@ public class FixPad {
                 return invertColor(getBackgroundAt(index));
             }
 
-//            public Color getBackgroundAt(int index){
-//               // if(getSelectedIndex() == index) return Color.WHITE;
-//                return Color.GREEN;
-//            }
         };
         panel1.add(mainTab, BorderLayout.CENTER);
         statusBar = new JLabel("...");
@@ -61,15 +57,6 @@ public class FixPad {
     }
 
     public static void main(String[] args) {
-//        try {
-//            packToZip(FileManager.homePath, FileManager.backupPath
-//                    + File.separator
-//                    + "zipped"
-//                    + System.currentTimeMillis()
-//                    + ".zip");
-//        } catch (IOException e) {
-//            System.out.println("zipping fail");
-//        }
         SwingUtilities.invokeLater(() ->
         {
             mainFrame = new JFrame("FixPad");
@@ -89,7 +76,6 @@ public class FixPad {
     }
 
     private void startFman() {
-        //setDefaultAttributes();
         fman.put(list);
         fman.start();
     }
@@ -107,15 +93,13 @@ public class FixPad {
                             @SuppressWarnings("unchecked")
                             java.util.List<File> files = (List<File>) transferable.getTransferData(flavor);
                             File f = files.get(0);
-                            String content = new String(
-                                    Files.readAllBytes(
-                                            f.toPath()),
-                                    StandardCharsets.UTF_8);
+                            String content = Files.readString(
+                                    f.toPath());
                             jt.setText(content);
                             return; // only one file
                         }
                     } catch (Exception e) {
-                        System.out.println(e);
+                        throw new RuntimeException(e);
                     }
                 }
             }
@@ -139,11 +123,6 @@ public class FixPad {
 
             jt.setBackground(new Color(12, 14, 16));
             jt.setForeground(Color.WHITE);
-//            Font f = Tools.getFont("Consolas", -1, 20, jt.getFont());
-//            if (f != null)
-//            {
-//                jt.setFont(f);
-//            }
             BlockCaret mc = new BlockCaret();
             jt.setCaret(mc);
             mc.startFlashing();

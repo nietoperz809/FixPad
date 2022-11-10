@@ -148,9 +148,7 @@ public class MyTextArea extends JTextArea {
         else {
             bkimg = NullFilter.createImage(i);
         }
-        {
-            setOpaque(false);
-        }
+        setOpaque(false);
         repaint();
     }
 

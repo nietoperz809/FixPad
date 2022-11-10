@@ -80,13 +80,20 @@ public class PopupMenuHandler extends MouseInputAdapter
         JMenu men = new JMenu(title);
 
         menuOption("Background Image", men, e -> {
+            String lastDirectory = Preferences.userNodeForPackage(this.getClass()).get("Images.lastDirectory", System.getProperty("user.home"));
             JFileChooser fc = new JFileChooser();
+            File lastPath = new File(lastDirectory);
+            if (lastPath.exists() && lastPath.isDirectory()) {
+                fc.setCurrentDirectory(new File(lastDirectory));
+            }
             CheckBoxAccessory cba = new CheckBoxAccessory();
             fc.setAccessory(cba);
             FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files",
                     "jpg", "jpeg", "png", "bmp");
             fc.setFileFilter(filter);
             if (fc.showOpenDialog(ta) == JFileChooser.APPROVE_OPTION) {
+                lastDirectory = fc.getCurrentDirectory().getPath();
+                Preferences.userNodeForPackage(this.getClass()).put("Images.lastDirectory", lastDirectory);
                 try {
                     BufferedImage img = ImageIO.read(fc.getSelectedFile());
                     ta.setBackImg(img, cba.isBoxSelected());
@@ -94,8 +101,6 @@ public class PopupMenuHandler extends MouseInputAdapter
                     throw new RuntimeException(ex);
                 }
             }
-
-
         });
 
         menuOption("Change tab name", men, e -> {
