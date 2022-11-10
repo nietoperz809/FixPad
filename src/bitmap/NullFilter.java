@@ -1,4 +1,4 @@
-package common;
+package bitmap;
 
 import java.awt.*;
 import java.awt.image.FilteredImageSource;
@@ -7,7 +7,7 @@ import java.awt.image.RGBImageFilter;
 
 public class NullFilter extends RGBImageFilter {
 
-    public static Image createIdentityImage(Image i) {
+    public static Image createImage(Image i) {
         NullFilter filter = new NullFilter();
         ImageProducer prod = new FilteredImageSource(i.getSource(), filter);
         return Toolkit.getDefaultToolkit().createImage(prod);

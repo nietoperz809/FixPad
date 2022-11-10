@@ -1,5 +1,7 @@
 package common;
 
+import bitmap.ClipboardImage;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;

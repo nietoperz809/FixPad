@@ -1,5 +1,6 @@
 package common;
 
+import bitmap.ImageNegative;
 import crypto.Crypto;
 import dialogs.SearchBox;
 import dialogs.SingleInputDialog;
@@ -18,6 +19,31 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.prefs.Preferences;
 
+
+class CheckBoxAccessory extends JComponent {
+    JCheckBox virtualCheckBox;
+    boolean checkBoxInit = false;
+
+    int preferredWidth = 150;
+    int preferredHeight = 100;//Mostly ignored as it is
+    int checkBoxPosX = 5;
+    int checkBoxPosY = 20;
+    int checkBoxWidth = preferredWidth;
+    int checkBoxHeight = 20;
+
+    public CheckBoxAccessory()
+    {
+        setPreferredSize(new Dimension(preferredWidth, preferredHeight));
+        virtualCheckBox = new JCheckBox("Negative image", checkBoxInit);
+        virtualCheckBox.setBounds(checkBoxPosX, checkBoxPosY, checkBoxWidth, checkBoxHeight);
+        this.add(virtualCheckBox);
+    }
+
+    public boolean isBoxSelected()
+    {
+        return virtualCheckBox.isSelected();
+    }
+}
 public class PopupMenuHandler extends MouseInputAdapter
 {
     private final JPopupMenu popup = new JPopupMenu();
@@ -55,13 +81,15 @@ public class PopupMenuHandler extends MouseInputAdapter
 
         menuOption("Background Image", men, e -> {
             JFileChooser fc = new JFileChooser();
+            CheckBoxAccessory cba = new CheckBoxAccessory();
+            fc.setAccessory(cba);
             FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files",
                     "jpg", "jpeg", "png", "bmp");
             fc.setFileFilter(filter);
             if (fc.showOpenDialog(ta) == JFileChooser.APPROVE_OPTION) {
                 try {
                     BufferedImage img = ImageIO.read(fc.getSelectedFile());
-                    ta.setBackImg(img);
+                    ta.setBackImg(img, cba.isBoxSelected());
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }

@@ -1,4 +1,4 @@
-package common;
+package bitmap;
 
 import java.awt.*;
 import java.awt.datatransfer.*;

@@ -1,6 +1,9 @@
 package common;
 
 
+import bitmap.ImageNegative;
+import bitmap.NullFilter;
+
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -138,8 +141,13 @@ public class MyTextArea extends JTextArea {
         this.tabIndex = idx;
     }
 
-    public void setBackImg(BufferedImage i) {
-        bkimg = NullFilter.createIdentityImage(i);
+    public void setBackImg (BufferedImage i, boolean negative) {
+        if (negative) {
+            bkimg = ImageNegative.createImage(i);
+        }
+        else {
+            bkimg = NullFilter.createImage(i);
+        }
         {
             setOpaque(false);
         }
