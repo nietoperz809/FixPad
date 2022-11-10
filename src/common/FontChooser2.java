@@ -83,7 +83,6 @@ public class FontChooser2 extends JDialog
         fontNameChoice.addItemListener(e -> previewFont());
         top.add(fontNameChoice);
 
-        Toolkit toolkit = Toolkit.getDefaultToolkit();
         // For JDK 1.1: returns about 10 names (Serif, SansSerif, etc.)
         // fontList = toolkit.getFontList();
         // For JDK 1.2: a much longer list; most of the names that come

@@ -84,7 +84,7 @@ public class TextAreaTools {
      */
     public static void numberText(MyTextArea ta) {
         String[] list = TaLinesToList(ta);
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         int num = 1;
         for (String s : list) {
             String s2 = Tools.ensureMinLength(num + ". ", 5);
@@ -101,7 +101,7 @@ public class TextAreaTools {
      */
     public static void romanNumberText(MyTextArea ta) {
         String[] list = TaLinesToList(ta);
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         int num = 1;
         for (String s : list) {
             String rnum = RomanNumber.toRoman(num++);
@@ -113,9 +113,9 @@ public class TextAreaTools {
 
     public static void capitalize(MyTextArea ta) {
         String[] list = TaLinesToList(ta);
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (String s : list) {
-            StringBuffer b2 = new StringBuffer(s);
+            StringBuilder b2 = new StringBuilder(s);
             for (int n = 0; n < b2.length() - 1; n++) {
                 char c1 = b2.charAt(n);
                 char c2 = b2.charAt(n + 1);
@@ -181,16 +181,13 @@ public class TextAreaTools {
      * Create Image from Textarea and put in to the Clipboard
      *
      * @param ta Source Textarea
-     * @return false if an error occurs
      */
-    public static boolean saveImageToClipboard(MyTextArea ta) {
+    public static void saveImageToClipboard(MyTextArea ta) {
         try {
             BufferedImage bimage = toImage(ta);
             new ClipboardImage(bimage);
-            return true;
         } catch (Exception e) {
             System.out.println(e);
-            return false;
         }
     }
 

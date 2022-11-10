@@ -10,7 +10,6 @@ public class ClipboardImage implements ClipboardOwner
         try
         {
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-            Rectangle screen = new Rectangle(screenSize);
             TransferableImage trans = new TransferableImage(i);
             Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
             c.setContents(trans, this);
@@ -33,7 +32,7 @@ public class ClipboardImage implements ClipboardOwner
         System.out.println("Lost Clipboard Ownership");
     }
 
-    private class TransferableImage implements Transferable
+    private static class TransferableImage implements Transferable
     {
 
         private final Image i;

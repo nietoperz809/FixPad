@@ -4,8 +4,6 @@ import common.*;
 import database.DBHandler;
 
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -21,7 +19,7 @@ public class TextAreaSettings implements Serializable
     private boolean editable;
     private String tabTitle;
 
-    private transient final static String fname = "FPsettings";
+    private final static String fname = "FPsettings";
 
 
     static public void save (ArrayList<MyTextArea> list)

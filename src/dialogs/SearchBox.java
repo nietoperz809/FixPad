@@ -149,7 +149,7 @@ public class SearchBox extends JDialog {
         return contentPane;
     }
 
-    public class SbResult {
+    public static class SbResult {
         public String from;
         public String to;
     }

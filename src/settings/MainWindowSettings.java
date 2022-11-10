@@ -1,11 +1,8 @@
 package settings;
 
-import common.FileManager;
 import common.FixPad;
 import database.DBHandler;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 
 import static common.FixPad.mainFrame;
@@ -14,7 +11,7 @@ import static common.FixPad.mainTab;
 public class MainWindowSettings implements Serializable
 {
     private int x, y, width, height, activeTab;
-    private transient final static String fname = "FPglobal";
+    private final static String fname = "FPglobal";
 
     public static void save()
     {

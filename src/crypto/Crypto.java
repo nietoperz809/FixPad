@@ -34,7 +34,7 @@ public class Crypto
         byte[] res = new byte[32];
         byte[] md5bytes = new byte[16];
         byte[] sha1bytes = new byte[20];
-        byte salt[] = {-48, -17, -86, -5, 67, 77, 51, -123, 69, -7, 2, 127, 80, 60, -97, -88,
+        byte[] salt = {-48, -17, -86, -5, 67, 77, 51, -123, 69, -7, 2, 127, 80, 60, -97, -88,
                 -25, -56, 55, 109, -115, -43, 78, -87, 108, 86, -12, -22, 101, 122, -82, 8,
 
         };
@@ -167,14 +167,11 @@ public class Crypto
         int size = all.length;
         int pos = 0;
         int len;
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         for (;;)
         {
-            if (size - pos >= 32)
-                len = 32;
-            else
-                len = size - pos;
+            len = Math.min(size - pos, 32);
             if (len == 0)
                 break;
             buff = new byte[len];

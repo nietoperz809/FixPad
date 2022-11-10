@@ -6,6 +6,7 @@ import javax.swing.text.DefaultCaret;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.io.Serial;
 
 /**
  * Code based on Groovy text editor ...
@@ -16,6 +17,7 @@ import java.awt.event.MouseEvent;
 
 public class BlockCaret extends DefaultCaret
 {
+    @Serial
     private static final long serialVersionUID = 1L;
     private final Object lock = new Object();
     private Rectangle saveRect = null;

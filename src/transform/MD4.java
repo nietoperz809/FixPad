@@ -21,7 +21,7 @@ public class MD4 implements Transformation
     /**
      * 4 32-bit words (interim result)
      */
-    private int[] context = new int[4];
+    private final int[] context = new int[4];
 
     /**
      * Number of bytes processed so far mod. 2 power of 64.
@@ -31,7 +31,7 @@ public class MD4 implements Transformation
     /**
      * 512 bits input buffer = 16 x 32-bit words holds until reaches 512 bits.
      */
-    private byte[] buffer = new byte[BLOCK_LENGTH];
+    private final byte[] buffer = new byte[BLOCK_LENGTH];
 
     /**
      * 512 bits work buffer = 16 x 32-bit words

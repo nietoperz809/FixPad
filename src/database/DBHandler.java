@@ -62,15 +62,17 @@ public class DBHandler {
         }
     }
 
-    public void closeConnection() {
-        try {
-            connection.close();
-            _inst = null;
-            System.out.println("DB closed");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+// --Commented out by Inspection START (11/9/2022 7:35 PM):
+//    public void closeConnection() {
+//        try {
+//            connection.close();
+//            _inst = null;
+//            System.out.println("DB closed");
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+// --Commented out by Inspection STOP (11/9/2022 7:35 PM)
 
     public void storeObject(String name, Object o) throws Exception {
         statement.execute("delete from OBJSTORE where name = '" + name + "'");

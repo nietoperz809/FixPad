@@ -5,6 +5,7 @@ package transform;/*
  */
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 /**
  *
@@ -15,27 +16,13 @@ public class Base64 implements Transformation
     @Override
     public String transform(String in)
     {
-        try
-        {
-            return java.util.Base64.getEncoder().encodeToString(in.getBytes("UTF-8"));
-        }
-        catch (UnsupportedEncodingException e)
-        {
-            return e.toString();
-        }
+        return java.util.Base64.getEncoder().encodeToString(in.getBytes(StandardCharsets.UTF_8));
     }
 
     @Override
     public String retransform(String in)
     {
         byte[] barr = java.util.Base64.getDecoder().decode(in);
-        try
-        {
-            return new String (barr, "UTF-8");
-        }
-        catch (UnsupportedEncodingException e)
-        {
-            return e.toString();
-        }
+        return new String (barr, StandardCharsets.UTF_8);
     }
 }

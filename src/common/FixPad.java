@@ -11,7 +11,7 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -20,7 +20,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import static common.Tools.invertColor;
-import static common.Tools.packToZip;
 
 public class FixPad {
     public static final FileManager fman = new FileManager();
@@ -81,7 +80,7 @@ public class FixPad {
             mainFrame.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosing(WindowEvent e) {
-                    pad.fman.stop();
+                    fman.stop();
                 }
             });
             mainFrame.setVisible(true);
@@ -111,7 +110,7 @@ public class FixPad {
                             String content = new String(
                                     Files.readAllBytes(
                                             f.toPath()),
-                                    "UTF-8");
+                                    StandardCharsets.UTF_8);
                             jt.setText(content);
                             return; // only one file
                         }

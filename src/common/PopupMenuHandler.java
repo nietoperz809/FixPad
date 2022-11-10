@@ -5,18 +5,23 @@ import dialogs.SearchBox;
 import dialogs.SingleInputDialog;
 import transform.*;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.prefs.Preferences;
 
 public class PopupMenuHandler extends MouseInputAdapter
 {
     private final JPopupMenu popup = new JPopupMenu();
-    public JMenuItem undoItem;
+    public final JMenuItem undoItem;
 
     PopupMenuHandler (MyTextArea ta)
     {
@@ -47,6 +52,23 @@ public class PopupMenuHandler extends MouseInputAdapter
     private JMenu settingSubMenu (MyTextArea ta, String title)
     {
         JMenu men = new JMenu(title);
+
+        menuOption("Background Image", men, e -> {
+            JFileChooser fc = new JFileChooser();
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files",
+                    "jpg", "jpeg", "png", "bmp");
+            fc.setFileFilter(filter);
+            if (fc.showOpenDialog(ta) == JFileChooser.APPROVE_OPTION) {
+                try {
+                    BufferedImage img = ImageIO.read(fc.getSelectedFile());
+                    ta.setBackImg(img);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+
+
+        });
 
         menuOption("Change tab name", men, e -> {
             String name = new SingleInputDialog().start("Tab name", "Tab:" + ta.getTabIndex());
@@ -108,9 +130,7 @@ public class PopupMenuHandler extends MouseInputAdapter
                 TextAreaTools.saveAsImage(ta, fname);
             }
         });
-        menuOption("Image to clipboard", men, e -> {
-            TextAreaTools.saveImageToClipboard(ta);
-        });
+        menuOption("Image to clipboard", men, e -> TextAreaTools.saveImageToClipboard(ta));
 
         return men;
     }
@@ -154,12 +174,8 @@ public class PopupMenuHandler extends MouseInputAdapter
                 }
             }
         });
-        menuOption("Center Text", men, e -> {
-            TextAreaTools.centerText(ta);
-        });
-        menuOption("Trim Lines", men, e -> {
-            TextAreaTools.trimLines(ta);
-        });
+        menuOption("Center Text", men, e -> TextAreaTools.centerText(ta));
+        menuOption("Trim Lines", men, e -> TextAreaTools.trimLines(ta));
         menuOption("Remove left", men, e -> {
             String s = new SingleInputDialog().start("How many chars", "");
             try
@@ -183,21 +199,11 @@ public class PopupMenuHandler extends MouseInputAdapter
                 System.out.println(e1);
             }
         });
-        menuOption("Line Number", men, e -> {
-            TextAreaTools.numberText(ta);
-        });
-        menuOption("Roman Line Number", men, e -> {
-            TextAreaTools.romanNumberText(ta);
-        });
-        menuOption("Upcase", men, e -> {
-            ta.setText(ta.getText().toUpperCase());
-        });
-        menuOption("Downcase", men, e -> {
-            ta.setText(ta.getText().toLowerCase());
-        });
-        menuOption("Capitalize", men, e -> {
-            TextAreaTools.capitalize(ta);
-        });
+        menuOption("Line Number", men, e -> TextAreaTools.numberText(ta));
+        menuOption("Roman Line Number", men, e -> TextAreaTools.romanNumberText(ta));
+        menuOption("Upcase", men, e -> ta.setText(ta.getText().toUpperCase()));
+        menuOption("Downcase", men, e -> ta.setText(ta.getText().toLowerCase()));
+        menuOption("Capitalize", men, e -> TextAreaTools.capitalize(ta));
         menuOption("Reverse", men, e -> {
             String rev = new StringBuilder(ta.getText()).reverse().toString();
             ta.setText(rev);
@@ -333,7 +339,7 @@ public class PopupMenuHandler extends MouseInputAdapter
             {
                 try
                 {
-                    byte[] pwh = Crypto.passwordHash(pass.getBytes("UTF-8"));
+                    byte[] pwh = Crypto.passwordHash(pass.getBytes(StandardCharsets.UTF_8));
                     String s = Crypto.cryptFilePeter1(pwh, ta.getText());
                     ta.setText(s);
                 }

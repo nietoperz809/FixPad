@@ -361,8 +361,7 @@ private static final int[] Tinv0 =
      */
     public void init(
         boolean           forEncryptionHere,
-        byte[]  key) throws Exception
-    {
+        byte[]  key) {
             WorkingKey = generateWorkingKey(key, forEncryptionHere);
             this.forEncryption = forEncryptionHere;
     }
@@ -371,7 +370,7 @@ private static final int[] Tinv0 =
     {
         System.out.println ("------------- Test AES ENGINE ---------");
 
-        byte key[] = new byte[32];
+        byte[] key = new byte[32];
         Random rnd = new Random();
         rnd.setSeed (123);
         rnd.nextBytes(key);
@@ -393,7 +392,7 @@ private static final int[] Tinv0 =
 
     public static void testSpeed (long i) throws Exception
     {
-        byte key[] = {1,2,3,4,5,6,7,8,9,10,1,2,3,4,5,6,7,8,9,10,1,2,3,4,5,6,7,8,9,10,1,2};
+        byte[] key = {1,2,3,4,5,6,7,8,9,10,1,2,3,4,5,6,7,8,9,10,1,2,3,4,5,6,7,8,9,10,1,2};
         byte[] test1 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
 
         AESEngine aes = new AESEngine();
@@ -409,7 +408,7 @@ private static final int[] Tinv0 =
         System.out.println ("Iterations: "+ i + "  Time: "+ start);
     }
 
-    public int processBlock(
+    public void processBlock(
         byte[] in,
         int inOff,
         byte[] out,
@@ -443,7 +442,6 @@ private static final int[] Tinv0 =
             packBlock(out, outOff);
         }
 
-        return BLOCK_SIZE;
     }
 
 //    public void reset()

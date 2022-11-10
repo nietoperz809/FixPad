@@ -17,12 +17,21 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class Tools {
+    public static void drawStretchedImage(Image image, Component canvas, Graphics g) {
+        int x1 = 0;
+        int y1 = 0;
+        int x2 = canvas.getWidth();
+        int y2 = canvas.getHeight();
+        int imgWidth = image.getWidth(null);
+        int imgHeight = image.getHeight(null);
+        g.drawImage(image, x1, y1, x2, y2, 0, 0, imgWidth, imgHeight, null);
+    }
 
-    public static void Error (String msg)
-    {
+    public static void Error (String msg) {
         JOptionPane.showMessageDialog(null, msg, "Error",
                 JOptionPane.ERROR_MESSAGE);
     }
+
     public static Font getFont(String fontName, int style, int size, Font currentFont) {
         if (currentFont == null) {
             return null;
@@ -151,10 +160,7 @@ public class Tools {
     public static boolean[] getCases(String in) {
         boolean[] cs = new boolean[in.length()];
         for (int s = 0; s < in.length(); s++) {
-            if (Character.isUpperCase(in.charAt(s)))
-                cs[s] = true;
-            else
-                cs[s] = false;
+            cs[s] = Character.isUpperCase(in.charAt(s));
         }
         return cs;
     }

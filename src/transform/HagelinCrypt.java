@@ -85,7 +85,7 @@ public class HagelinCrypt implements Transformation
         return (b);
     }
 
-    private void setup(int list[], int n) 
+    private void setup(int[] list, int n)
     {
         int lp;
         lp = 0;

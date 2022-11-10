@@ -42,8 +42,8 @@ public class Pitti3Crypt implements Transformation
     }
 
     long hash;
-    ATables charTable;
-    ATables numTable;
+    final ATables charTable;
+    final ATables numTable;
 
     public Pitti3Crypt(String passwd)
     {
@@ -88,9 +88,8 @@ public class Pitti3Crypt implements Transformation
         StringBuilder out = new StringBuilder();
         ArrayList<String> splitted = fixedSplit(in, 12);
 
-        for (int s = 0; s < splitted.size(); s++)
-        {
-            out.append (substituteWord(splitted.get(s), mode));
+        for (String value : splitted) {
+            out.append(substituteWord(value, mode));
         }
 
         return out.toString();

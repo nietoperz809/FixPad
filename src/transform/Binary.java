@@ -22,7 +22,7 @@ public class Binary implements Transformation
             char c = in.charAt (0);
             sb.append (strToBitString (c));
             sb.append (" ");
-            in = in.substring (1, in.length ());
+            in = in.substring (1);
         }
         return sb.toString ();
     }
