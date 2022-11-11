@@ -1,6 +1,9 @@
 package database;
 
 
+import common.Tools;
+
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.sql.*;
 
@@ -35,8 +38,36 @@ public class DBHandler {
             _inst = new DBHandler();
             _inst.execute("create table if not exists OBJSTORE (name varchar(255) primary key, " +
                     "object blob, time timestamp default current_timestamp())");
+            _inst.execute("create table if not exists BKIMG (index int primary key not null, image blob)");
         }
         return _inst;
+    }
+
+    public void addBKImage(BufferedImage img, int index) {
+        PreparedStatement prep;
+        try {
+            byte[] buff = Tools.imgToByteArray(img);
+            execute ("delete from BKIMG where index = "+index);
+            prep = connection.prepareStatement(
+                    "insert into BKIMG (index,image) values (?,?)");
+            prep.setInt(1, index);
+            prep.setBytes(2, buff);
+            prep.execute();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public BufferedImage getBKImage (int index) {
+        try (ResultSet res = query("select image from BKIMG where index = " + index)) {
+            if (res.next()) {
+                byte[] b = res.getBytes(1);
+                return Tools.byteArrayToImg(b);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return null;
     }
 
 //    public static void main(String[] args) throws Exception {

@@ -4,9 +4,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
@@ -25,6 +23,36 @@ public class Tools {
         int imgWidth = image.getWidth(null);
         int imgHeight = image.getHeight(null);
         g.drawImage(image, x1, y1, x2, y2, 0, 0, imgWidth, imgHeight, null);
+    }
+
+    public static byte[] imgToByteArray (BufferedImage img) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write (img, "jpg", baos);
+        return baos.toByteArray();
+    }
+
+    public static BufferedImage byteArrayToImg (byte[] arr) throws IOException {
+        InputStream is = new ByteArrayInputStream(arr);
+        return ImageIO.read(is);
+    }
+
+    public static BufferedImage toBufferedImage(Image img)
+    {
+        if (img instanceof BufferedImage)
+        {
+            return (BufferedImage) img;
+        }
+
+        // Create a buffered image with transparency
+        BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_RGB);
+
+        // Draw the image on to the buffered image
+        Graphics2D bGr = bimage.createGraphics();
+        bGr.drawImage(img, 0, 0, null);
+        bGr.dispose();
+
+        // Return the buffered image
+        return bimage;
     }
 
     public static void Error (String msg) {

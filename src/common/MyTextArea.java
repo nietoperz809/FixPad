@@ -3,6 +3,7 @@ package common;
 
 import bitmap.ImageNegative;
 import bitmap.NullFilter;
+import database.DBHandler;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -139,6 +140,13 @@ public class MyTextArea extends JTextArea {
     public void setTabData(JTabbedPane tp, int idx) {
         this.tpane = tp;
         this.tabIndex = idx;
+        BufferedImage img = DBHandler.getInst().getBKImage(idx);
+        if (img != null)
+        {
+            bkimg = NullFilter.createImage (img);
+            setOpaque(false);
+            repaint();
+        }
     }
 
     public void setBackImg (BufferedImage i, boolean negative) {
@@ -148,6 +156,7 @@ public class MyTextArea extends JTextArea {
         else {
             bkimg = NullFilter.createImage(i);
         }
+        DBHandler.getInst().addBKImage(Tools.toBufferedImage(bkimg), tabIndex);
         setOpaque(false);
         repaint();
     }
