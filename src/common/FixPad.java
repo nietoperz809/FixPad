@@ -11,7 +11,6 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -116,7 +115,7 @@ public class FixPad {
             panel2.add(scrollPane1, "Card1");
             MyTextArea jt = new MyTextArea();
             jt.setCursor(cur);
-            jt.setTabData(mainTab, index);
+            jt.setAditionalTabData(mainTab, index);
             enableDrops(jt);
             scrollPane1.setViewportView(jt);
             list.add(jt);
@@ -132,4 +131,31 @@ public class FixPad {
     }
 }
 
+/*
+    private void setupTabs() {
+        Cursor cur = new Cursor(Cursor.HAND_CURSOR);
+        for (int index = 0; index < 21; index++) {
+            final JPanel panel2 = new JPanel();
+            panel2.setLayout(new CardLayout(0, 0));
+            mainTab.addTab("E:" + index, panel2);
+            final JScrollPane scrollPane1 = new JScrollPane();
+            panel2.add(scrollPane1, "Card1");
+            MyTextArea jt = new MyTextArea();
+            jt.setCursor(cur);
+            jt.setAditionalTabData(mainTab, index);
+            enableDrops(jt);
+            scrollPane1.setViewportView(jt);
+            list.add(jt);
 
+            jt.setBackground(new Color(12, 14, 16));
+            jt.setForeground(Color.WHITE);
+            BlockCaret mc = new BlockCaret();
+            jt.setCaret(mc);
+            mc.startFlashing();
+            jt.setCaretColor(Color.ORANGE);
+            jt.addMouseListener(new PopupMenuHandler(jt));
+        }
+    }
+
+
+ */

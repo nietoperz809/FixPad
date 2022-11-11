@@ -58,6 +58,10 @@ public class DBHandler {
         }
     }
 
+    public void deleteBkImage (int index) {
+        execute ("delete from BKIMG where index = "+index);
+    }
+
     public BufferedImage getBKImage (int index) {
         try (ResultSet res = query("select image from BKIMG where index = " + index)) {
             if (res.next()) {

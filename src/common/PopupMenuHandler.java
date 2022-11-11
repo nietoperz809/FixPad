@@ -44,6 +44,7 @@ class CheckBoxAccessory extends JComponent {
         return virtualCheckBox.isSelected();
     }
 }
+
 public class PopupMenuHandler extends MouseInputAdapter
 {
     private final JPopupMenu popup = new JPopupMenu();
@@ -147,6 +148,7 @@ public class PopupMenuHandler extends MouseInputAdapter
             Color col = JColorChooser.showDialog(null,
                     "Background Color", null);
             ta.setBackground(col);
+            ta.removeBKImage();
         });
 
         return men;
@@ -170,6 +172,9 @@ public class PopupMenuHandler extends MouseInputAdapter
 
     private void saveTextFunc (MyTextArea ta, String encoding)
     {
+//        Object o = ta.getParent();
+//        System.out.println(o);
+
         String defFile = ta.getTpane().getTitleAt(ta.getTabIndex());
         String fname = new SingleInputDialog().start(
                 "Path and name of File",

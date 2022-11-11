@@ -137,16 +137,23 @@ public class MyTextArea extends JTextArea {
      * @param tp  Pane
      * @param idx index
      */
-    public void setTabData(JTabbedPane tp, int idx) {
+    public void setAditionalTabData(JTabbedPane tp, int idx) {
         this.tpane = tp;
         this.tabIndex = idx;
-        BufferedImage img = DBHandler.getInst().getBKImage(idx);
-        if (img != null)
+        bkimg /*BufferedImage img*/ = DBHandler.getInst().getBKImage(idx);
+        if (bkimg /*img*/ != null)
         {
-            bkimg = NullFilter.createImage (img);
+            //bkimg = NullFilter.createImage (img);
             setOpaque(false);
             repaint();
         }
+    }
+
+    public void removeBKImage() {
+        DBHandler.getInst().deleteBkImage(tabIndex);
+        bkimg = null;
+        setOpaque(true);
+        repaint();
     }
 
     public void setBackImg (BufferedImage i, boolean negative) {

@@ -16,10 +16,11 @@ import java.util.zip.ZipOutputStream;
 
 public class Tools {
     public static void drawStretchedImage(Image image, Component canvas, Graphics g) {
+        JViewport o = (JViewport) canvas.getParent();
         int x1 = 0;
         int y1 = 0;
-        int x2 = canvas.getWidth();
-        int y2 = canvas.getHeight();
+        int x2 = o.getWidth(); //canvas.getWidth();
+        int y2 = o.getHeight(); //canvas.getHeight();
         int imgWidth = image.getWidth(null);
         int imgHeight = image.getHeight(null);
         g.drawImage(image, x1, y1, x2, y2, 0, 0, imgWidth, imgHeight, null);
