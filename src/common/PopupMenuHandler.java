@@ -2,6 +2,7 @@ package common;
 
 import bitmap.ImageNegative;
 import crypto.Crypto;
+import database.DBHandler;
 import dialogs.SearchBox;
 import dialogs.SingleInputDialog;
 import transform.*;
@@ -66,6 +67,29 @@ public class PopupMenuHandler extends MouseInputAdapter
         popup.add(new JSeparator());
         undoItem = menuOption("Undo", popup, e -> ta.pop());
         popup.add(new JSeparator());
+        menuOption("Database location", popup, e -> this.databaseSelect());
+    }
+
+    private void databaseSelect() {
+        String key = "Database.lastDirectory";
+        Class clazz = FixPad.mainFrame.getClass();
+        String lastDirectory = Preferences.userNodeForPackage (clazz)
+                .get(key, System.getProperty("user.home"));
+        JFileChooser fc = new JFileChooser();
+        File lastPath = new File(lastDirectory);
+        if (lastPath.exists() && lastPath.isDirectory()) {
+            fc.setCurrentDirectory(new File(lastDirectory));
+        }
+        FileNameExtensionFilter filter =
+                new FileNameExtensionFilter("Database", new String[]{"db"});
+        fc.setFileFilter(filter);
+        fc.setMultiSelectionEnabled(true);
+        if (fc.showOpenDialog(FixPad.mainFrame) == JFileChooser.APPROVE_OPTION) {
+            lastDirectory = fc.getCurrentDirectory().getPath();
+            Preferences.userNodeForPackage(clazz).put(key, lastDirectory);
+            DBHandler.setNewURL(lastDirectory, fc.getSelectedFile().getName());
+        }
+
     }
 
     private JMenuItem menuOption (String name, JComponent men, ActionListener e)

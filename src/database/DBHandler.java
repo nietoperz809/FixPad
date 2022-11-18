@@ -1,31 +1,54 @@
 package database;
 
 
+import common.FixPad;
 import common.Tools;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.sql.*;
+import java.util.prefs.Preferences;
 
 public class DBHandler {
     private static DBHandler _inst = null;
     private Connection connection;
     private Statement statement;
+    private static final String key = "Database.url";
+    private static final Class clazz = FixPad.mainFrame.getClass();
+
+    private static void putURL(String u) {
+        Preferences.userNodeForPackage(clazz).put(key, u);
+    }
+
+    private static String getURL() {
+        return Preferences.userNodeForPackage (clazz)
+                .get(key, "jdbc:h2:./datastore/fixpaddb");
+    }
 
     /**
      * Private constructor like Singletons should have
      */
     private DBHandler() {
         try {
-            String url = "jdbc:h2:./datastore/fixpaddb";
             String user = "LALA";
             String pwd = "dumm";
-            connection = DriverManager.getConnection(url, user, pwd);
+            String url = getURL();
+            System.out.println("Open DB: "+url);
+            connection = DriverManager.getConnection (url, user, pwd);
             statement = connection.createStatement();
         } catch (SQLException e) {
             common.Tools.Error(e.getMessage());
             System.exit(-1);
         }
+    }
+
+    public static void setNewURL (String path, String file) {
+        int i = file.indexOf('.');
+        if (i >= 0) {
+            file = file.substring(0, i);
+        }
+        _inst.closeConnection();
+        putURL("jdbc:h2:"+path+"\\"+file);
     }
 
     /**
@@ -97,17 +120,15 @@ public class DBHandler {
         }
     }
 
-// --Commented out by Inspection START (11/9/2022 7:35 PM):
-//    public void closeConnection() {
-//        try {
-//            connection.close();
-//            _inst = null;
-//            System.out.println("DB closed");
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-// --Commented out by Inspection STOP (11/9/2022 7:35 PM)
+    public void closeConnection() {
+        try {
+            connection.close();
+            _inst = null;
+            System.out.println("DB closed");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public void storeObject(String name, Object o) throws Exception {
         statement.execute("delete from OBJSTORE where name = '" + name + "'");
