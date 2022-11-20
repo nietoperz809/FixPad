@@ -87,7 +87,10 @@ public class PopupMenuHandler extends MouseInputAdapter
         if (fc.showOpenDialog(FixPad.mainFrame) == JFileChooser.APPROVE_OPTION) {
             lastDirectory = fc.getCurrentDirectory().getPath();
             Preferences.userNodeForPackage(clazz).put(key, lastDirectory);
+            FixPad.__inst.removeAllTabs();
             DBHandler.setNewURL(lastDirectory, fc.getSelectedFile().getName());
+            FixPad.__inst.mainFrame.setTitle("Fixpad: "+fc.getSelectedFile().getName());
+            FixPad.__inst.setupTabs();
         }
 
     }

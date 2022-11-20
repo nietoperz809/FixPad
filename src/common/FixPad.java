@@ -23,13 +23,16 @@ import java.util.List;
 import static common.Tools.invertColor;
 
 public class FixPad {
-    public static final FileManager fman = new FileManager();
+    public static FileManager fman;
     private final static DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
     public static JFrame mainFrame;
     public static JTabbedPane mainTab;
     private static JLabel statusBar;
     private final ArrayList<MyTextArea> list = new ArrayList<>();
     private final JPanel panel1;
+
+    public static FixPad __inst;
+
 
     public FixPad() {
         panel1 = new JPanel();
@@ -61,25 +64,22 @@ public class FixPad {
         {
             mainFrame = new JFrame("FixPad");
             FixPad pad = new FixPad();
+            FixPad.__inst = pad;
             pad.setupTabs();
             mainFrame.setContentPane(pad.panel1);
             mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             mainFrame.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosing(WindowEvent e) {
-                    fman.stop();
+                    fman.saveAll();
                     DBHandler.getInst().closeConnection();
                 }
             });
             mainFrame.setVisible(true);
-            pad.startFman();
+            //pad.startFman();
         });
     }
 
-    private void startFman() {
-        fman.put(list);
-        fman.start();
-    }
 
     private void enableDrops(MyTextArea jt) {
         new DropTarget(jt, new DropTargetAdapter() {
@@ -107,7 +107,13 @@ public class FixPad {
         });
     }
 
-    private void setupTabs() {
+    public void removeAllTabs() {
+        fman.saveAll();
+        mainTab.removeAll();
+        list.clear();
+    }
+
+    public void setupTabs() {
         Cursor cur = new Cursor(Cursor.HAND_CURSOR);
         for (int index = 0; index < 21; index++) {
             final JPanel panel2 = new JPanel();
@@ -130,34 +136,8 @@ public class FixPad {
             jt.setCaretColor(Color.ORANGE);
             jt.addMouseListener(new PopupMenuHandler(jt));
         }
+        fman = new FileManager(list);
+        fman.loadAll();
     }
 }
 
-/*
-    private void setupTabs() {
-        Cursor cur = new Cursor(Cursor.HAND_CURSOR);
-        for (int index = 0; index < 21; index++) {
-            final JPanel panel2 = new JPanel();
-            panel2.setLayout(new CardLayout(0, 0));
-            mainTab.addTab("E:" + index, panel2);
-            final JScrollPane scrollPane1 = new JScrollPane();
-            panel2.add(scrollPane1, "Card1");
-            MyTextArea jt = new MyTextArea();
-            jt.setCursor(cur);
-            jt.setAditionalTabData(mainTab, index);
-            enableDrops(jt);
-            scrollPane1.setViewportView(jt);
-            list.add(jt);
-
-            jt.setBackground(new Color(12, 14, 16));
-            jt.setForeground(Color.WHITE);
-            BlockCaret mc = new BlockCaret();
-            jt.setCaret(mc);
-            mc.startFlashing();
-            jt.setCaretColor(Color.ORANGE);
-            jt.addMouseListener(new PopupMenuHandler(jt));
-        }
-    }
-
-
- */
