@@ -1,5 +1,7 @@
 package common;
 
+import database.DBHandler;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -32,7 +34,6 @@ public class FixPad {
     public FixPad() {
         panel1 = new JPanel();
         panel1.setLayout(new BorderLayout(0, 0));
-        //UIManager.put("TabbedPane.selected", Color.green);
         mainTab = new JTabbedPane() {
             public Color getForegroundAt(int index) {
                 if (getSelectedIndex() == index) return Color.BLACK;
@@ -67,6 +68,7 @@ public class FixPad {
                 @Override
                 public void windowClosing(WindowEvent e) {
                     fman.stop();
+                    DBHandler.getInst().closeConnection();
                 }
             });
             mainFrame.setVisible(true);
